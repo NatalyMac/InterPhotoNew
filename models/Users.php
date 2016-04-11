@@ -33,9 +33,6 @@ use yii\filters\VerbFilter;
 class Users extends \yii\db\ActiveRecord implements IdentityInterface
 {
 
-    const ROLE_CLIENT = 'client';
-    const ROLE_PHOTOGRAPHER = 'photographer';
-    const ROLE_ADMIN = 'admin';
     /**
      * @inheritdoc
      */

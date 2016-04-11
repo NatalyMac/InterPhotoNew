@@ -31,7 +31,7 @@ class UsersController extends ActiveController
         // переопределяем метод prepareDataProvider, который подготовит нам 
         //отсортированные данные
         $actions['index']['prepareDataProvider'] = [$this, 'indexDataProvider'];
-        return $actions;
+            return $actions;
     
     }
     
