@@ -120,9 +120,9 @@ class UsersController extends ActiveController
                     
                     'matchCallback' => function ($rule, $action)
                     {
-                    if (!Yii::$app->user->getIsGuest() && 'admin' === Yii::$app->user->identity->role) return true;
-                    if (!Yii::$app->user->getIsGuest() && 'photographer' === Yii::$app->user->identity->role) return true;
-                    if (!Yii::$app->user->getIsGuest() && 'client' === Yii::$app->user->identity->role) return true;
+                    if (!\Yii::$app->user->getIsGuest() && 'admin' === \Yii::$app->user->identity->role) return true;
+                    if (!\Yii::$app->user->getIsGuest() && 'photographer' === \Yii::$app->user->identity->role) return true;
+                    if (!\Yii::$app->user->getIsGuest() && 'client' === \Yii::$app->user->identity->role) return true;
                     }
                 
                     ],
@@ -133,7 +133,7 @@ class UsersController extends ActiveController
                     'roles' => ['admin'],
                     'matchCallback' => function ($rule, $action)
                     {
-                    if (!Yii::$app->user->getIsGuest() && 'admin' === Yii::$app->user->identity->role) return true;
+                    if (!\Yii::$app->user->getIsGuest() && 'admin' === \Yii::$app->user->identity->role) return true;
                     }
                     
                     ],
@@ -144,7 +144,7 @@ class UsersController extends ActiveController
                         'roles' => ['admin'],
                         'matchCallback' => function ($rule, $action)
                         {
-                        if (!Yii::$app->user->getIsGuest() && 'admin' === Yii::$app->user->identity->role) return true;
+                        if (!\Yii::$app->user->getIsGuest() && 'admin' === \Yii::$app->user->identity->role) return true;
                         }
                     ],
                   ],//rules
