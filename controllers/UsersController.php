@@ -93,7 +93,7 @@ class UsersController extends ActiveController
                  'class' => HttpBearerAuth::className(),
             ]
         ];
-       
+      
        $behaviors['access'] = 
        // использовано два метода проверки
        // 1-й проверяем прямо здесь наши роли и действия в секции 'rules'
@@ -120,9 +120,9 @@ class UsersController extends ActiveController
                     
                     'matchCallback' => function ($rule, $action)
                     {
-                    if (!$user->getIsGuest() && 'admin' === $user->identity->role) return true;
-                    if (!$user->getIsGuest() && 'photographer' === $user->identity->role) return true;
-                    if (!$user->getIsGuest() && 'client' === $user->identity->role) return true;
+                    if (!Yii::$app->user->getIsGuest() && 'admin' === Yii::$app->user->identity->role) return true;
+                    if (!Yii::$app->user->getIsGuest() && 'photographer' === Yii::$app->user->identity->role) return true;
+                    if (!Yii::$app->user->getIsGuest() && 'client' === Yii::$app->user->identity->role) return true;
                     }
                 
                     ],
@@ -133,7 +133,7 @@ class UsersController extends ActiveController
                     'roles' => ['admin'],
                     'matchCallback' => function ($rule, $action)
                     {
-                    if (!$user->getIsGuest() && 'admin' === $user->identity->role) return true;
+                    if (!Yii::$app->user->getIsGuest() && 'admin' === Yii::$app->user->identity->role) return true;
                     }
                     
                     ],
