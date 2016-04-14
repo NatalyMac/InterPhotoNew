@@ -50,9 +50,62 @@ class RbacController extends Controller
         */ 
 
         $auth->assign($photographer, 22);
+        $auth->assign($photographer, 23);
         $auth->assign($admin, 13);
 
     }
+    
+    public function actionCreate_rule_view()
+    {
+        $auth = Yii::$app->authManager;
+
+        // add the rule
+        $rule = new \app\controllers\auth\AuthorRule;
+        //$auth->add($rule);
+
+        // добавляем разрешение "updateOwnPost" и привязываем к нему правило.
+        $viewOwnAlbum = $auth->createPermission('viewOwnAlbum');
+        $viewOwnAlbum->description = 'View own album';
+        $viewOwnAlbum->ruleName = $rule->name;
+        $auth->add($viewOwnAlbum);
+
+        $viewAlbum = $auth->createPermission('viewAlbum');
+        // "updateOwnPost" будет использоваться из "updatePost"
+        $auth->addChild($viewOwnAlbum, $viewAlbum);
+        // проверить в таблице item_child photograper -> udateAlbum
+        // удалить, иначе нет правильного наследования или в ролях коммент
+        $photographer = $auth->createPermission('photographer');
+        // разрешаем "автору" обновлять его посты
+        $auth->addChild($photographer, $viewOwnAlbum);
+
+    }
+
+
+    public function actionCreate_rule_udate()
+    {
+        $auth = Yii::$app->authManager;
+
+        // add the rule
+        $rule = new \app\controllers\auth\AuthorRule;
+        $auth->add($rule);
+
+        // добавляем разрешение "updateOwnPost" и привязываем к нему правило.
+        $updateOwnAlbum = $auth->createPermission('updateOwnAlbum');
+        $updateOwnAlbum->description = 'Update own album';
+        $updateOwnAlbum->ruleName = $rule->name;
+        $auth->add($updateOwnAlbum);
+
+        $updateAlbum = $auth->createPermission('updateAlbum');
+        // "updateOwnPost" будет использоваться из "updatePost"
+        $auth->addChild($updateOwnAlbum, $updateAlbum);
+        // проверить в таблице item_child photograper -> udateAlbum
+        // удалить, иначе нет правильного наследования или в ролях коммент
+        $photographer = $auth->createPermission('photographer');
+        // разрешаем "автору" обновлять его посты
+        $auth->addChild($photographer, $updateOwnAlbum);
+
+    }
+
 
     public function actionCreate_role()    
     {
@@ -71,7 +124,7 @@ class RbacController extends Controller
         $auth->addChild($photographer, $indexAlbum);
         $auth->addChild($photographer, $createAlbum);
         $auth->addChild($photographer, $viewAlbum);
-        $auth->addChild($photographer, $updateAlbum);
+        //$auth->addChild($photographer, $updateAlbum);
 
         $deleteAlbum = $auth->createPermission('deleteAlbum');
         $admin = $auth->createRole('admin');

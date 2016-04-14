@@ -27,9 +27,8 @@ class AccessRules extends \yii\filters\AccessRule {
             } 
         // проверяем, что пользователь залогиненный и его роль совпадает с ролью 
         //в правилах
-        // раскомментить если проверка здесь
-        // elseif (!$user->getIsGuest() && $role === $user->identity->role) 
-        //  return true;
+       elseif (!$user->getIsGuest() && $role === $user->identity->role) 
+          return true;
                 
         }
  
