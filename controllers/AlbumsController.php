@@ -24,14 +24,7 @@ class AlbumsController extends MainController
     public $nameModel   = '\app\models\Albums';
 
  /*
- public function findUserModel($id)
-    {
-        if (($model = Albums::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }   
+ 
 */
  public function behaviors()
     {
@@ -92,7 +85,7 @@ class AlbumsController extends MainController
             
         ];
 
-      return $behaviors;
+    return $behaviors;
    }
 
 }

@@ -33,25 +33,25 @@ class RbacController extends Controller
      * Lists all AuthItem models.
      * @return mixed
      */
+
+    public $authModel   = '\app\models\Users';
+
     // создаем разрешения
+   
+
     public function actionAssignment()
     {
        $auth = Yii::$app->authManager;
-       $photographer = $auth->createRole('photographer');
-       $admin = $auth->createRole('admin');
-       
-       // здесь привязка жесткая, нужно вынести установку роли и разрешения в метод 
-       // ?????
-       // пример
-       /*
-        $auth = Yii::$app->authManager;
-        $authorRole = $auth->getRole('author');
-        $auth->assign($authorRole, $user->getId());
-        */ 
+       $model = new $this->authModel;
+       $roles=$auth->getRoles();
 
-        $auth->assign($photographer, 22);
-        $auth->assign($photographer, 23);
-        $auth->assign($admin, 13);
+        foreach ($roles as $role) {
+            if ($model->role === $role)
+                { 
+                    $current_role = $auth->createRole($role);
+                    $auth->assign($current_role, $model->id);
+                }
+        }
 
     }
     

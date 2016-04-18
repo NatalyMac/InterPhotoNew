@@ -19,5 +19,4 @@ function vd($var, $exit = true)
     if ($exit)
         exit;
 }
-
 $application->run();

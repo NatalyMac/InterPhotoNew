@@ -25,7 +25,7 @@ class AuthorRule extends Rule
         $model = $params['model'];
     } else {
         $id = \Yii::$app->request->queryParams['id'];
-        $model = \Yii::$app->controller->findNeedModel($id);
+        $model = \Yii::$app->controller->findNeededModel($id);
         //$model = Albums::findOne($id);
     }
         return $model->user_id === $user;

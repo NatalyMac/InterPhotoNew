@@ -34,14 +34,14 @@ class Albums extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'name'], 'required'],
+            [['name'], 'required'],
             [['user_id', 'active'], 'integer'],
             [['created_at', 'modified_at'], 'safe'],
             [['name'], 'string', 'max' => 50],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
-
+//'user_id'
     /**
      * @inheritdoc
      */
@@ -80,7 +80,22 @@ class Albums extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
+    
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) 
+           {
+                if ($this->isNewRecord) 
+                {
+                    // если user_id пустой
+                    if (!$this->user_id) 
+                        {
+                            $createdBy =  \Yii::$app->user->identity;
+                            $this->user_id = $createdBy->id;
 
-
-
+                        }
+                }
+            return true;
+            }
+    }
 }

@@ -23,7 +23,7 @@ class UsersController extends MainController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-       
+
         $behaviors['access'] = 
        // использовано два метода проверки
        // 1-й проверяем прямо здесь наши роли и действия в секции 'rules'
@@ -70,7 +70,8 @@ class UsersController extends MainController
         
                 return $behaviors;
     }
-//хелперы
+
+    //хелперы
 
     public function isAdmin()
     {

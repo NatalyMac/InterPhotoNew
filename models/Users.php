@@ -159,28 +159,60 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
  
     public static function findIdentityByAccessToken($token, $type = null)
     {   
-        
         return static::findOne(['access_token' => $token]);
     }
 
+    public function generateAccessToken()
+    {
+        $this->access_token = Yii::$app->security->generateRandomString();
+        $this->update();
+    }
 
-  public function beforeSave($insert)
+    public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            
-            if ($this->isNewRecord) {
+            if ($this->isNewRecord) 
+            {
                 $this->generateAuthKey($this->auth_key);
-                $this->setPassword($this->password);}
+                $this->setPassword($this->password);
+            }
 
-            if ($this->isAttributeChanged('password')){
-            $this->setPassword($this->password);   }
-            return true;
-            
+            if ($this->isAttributeChanged('password'))
+            {
+                $this->setPassword($this->password);   
+            }
+                return true;
         } else {
             return false;
         }
         
     }
-  
+    public function afterSave()
+    {
+       if ($this->isNewRecord) 
+        {
+            $this->roleAssignment();
+        }
+        return true;
+    }
+
+    public function roleAssignment()
+    {
+        $auth = Yii::$app->authManager;
+        $roles=$auth->getRoles();
+
+        foreach ($roles as $role) 
+        {
+            if ($this->role === $role)
+                { 
+                    $current_role = $auth->createRole($role);
+                    $auth->assign($current_role, $this->id);
+                }
+        }
+    }
+
 }
+
+
+
 
