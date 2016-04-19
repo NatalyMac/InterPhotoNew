@@ -7,9 +7,10 @@ use yii\rbac\Rule;
 /**
  * Проверяем authorID на соответствие с пользователем, переданным через параметры
  */
-class AuthorRule extends Rule
+class AllowRule extends Rule
 {
-    public $name = 'isAuthor';
+    public $name = 'isAllow';
+    public $allowId = null;
 
     /**
      * @param string|integer $user the user ID.
@@ -19,11 +20,16 @@ class AuthorRule extends Rule
      */
     public function execute($user, $item, $params)
     {
-   
-        if (isset($params['model'])) $model = $params['model'];
-   
-        $id = \Yii::$app->request->queryParams['id'];
-        $model = \Yii::$app->controller->findModelAuthorRule($id);
-            return $model->user_id === $user;
+        $user_id = null;
+        $id = \Yii::$app->user->identity->id;
+    
+        if (isset(\Yii::$app->request->queryParams['user_id'])) 
+            $user_id = \Yii::$app->request->queryParams['user_id'];
+            \Yii::$app->controller->allowId = 'user_id';    
+        
+        if (($user_id == $id) or ($user_id == null))
+            return true;
+        if ($user_id !== $id) 
+            return false;
     }
 }

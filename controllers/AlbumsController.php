@@ -31,9 +31,10 @@ class AlbumsController extends MainController
         $behaviors = parent::behaviors();
        
 
-//проверка прав через RBAC
-        $behaviors['access'] = [
+//check Access RBAC
+       $behaviors['access'] = [
                 'class' => AccessControl::className(),
+                'only' => ['create', 'update', 'delete','view','index'],
                 'rules' => [
                     [
                         'actions' => ['delete'],
@@ -49,9 +50,9 @@ class AlbumsController extends MainController
                         'actions' => ['update'],
                         'allow' => true,
                         'matchCallback' => function ($rule, $action)
-                        {
+                        {   
                             if(\Yii::$app->user->can('updateAlbum'))
-                                return true;
+                               return true;
                         }
                     ],
                     [
@@ -67,7 +68,7 @@ class AlbumsController extends MainController
                         'actions' => ['index'],
                         'allow' => true,
                         'matchCallback' => function ($rule, $action)
-                        {
+                        {  // $this->allowId = 'user_id';
                             if(\Yii::$app->user->can('indexAlbum'))
                                 return true;
                         }
@@ -84,8 +85,8 @@ class AlbumsController extends MainController
                 ],
             
         ];
+       
 
     return $behaviors;
    }
-
 }

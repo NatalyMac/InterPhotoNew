@@ -61,6 +61,21 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         ];
     }
 
+public function fields()
+{
+    $fields = parent::fields();
+
+    // удаляем не безопасные поля
+    unset($fields['auth_key'], $fields['password_hash'], $fields['access_token']);
+
+    return $fields;
+}
+
+public function extraFields()
+{
+    return ['albums'];
+}
+
     /**
      * @inheritdoc
      */
@@ -176,25 +191,30 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
                 $this->generateAuthKey($this->auth_key);
                 $this->setPassword($this->password);
             }
-
             if ($this->isAttributeChanged('password'))
             {
                 $this->setPassword($this->password);   
+                $this->generateAuthKey($this->auth_key);
             }
+
                 return true;
+
         } else {
             return false;
         }
         
     }
-    public function afterSave()
+    
+    public function afterSave($insert, $attrs)
     {
-       if ($this->isNewRecord) 
+        if ($insert) 
         {
-            $this->roleAssignment();
+            $this->roleAssignment();    
+            return true;
+        } else { 
+            return false;
         }
-        return true;
-    }
+}
 
     public function roleAssignment()
     {
@@ -203,12 +223,14 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
 
         foreach ($roles as $role) 
         {
-            if ($this->role === $role)
-                { 
-                    $current_role = $auth->createRole($role);
+            if ($this->role == $role->name)
+               { 
+                    $current_role = $auth->createRole($role->name);
                     $auth->assign($current_role, $this->id);
                 }
+     
         }
+     return true;  
     }
 
 }

@@ -27,7 +27,7 @@ class UsersSearch extends Users
         return Model::scenarios();
     }
 
-    public function searchLinkItems($params)
+   /* public function searchLinkItems($params)
     {
         if (array_key_exists('id', $params) and count($params)==1)
            {
@@ -46,20 +46,23 @@ class UsersSearch extends Users
     
     } 
 
+*/
     public function search($params)
     {
         $query = Users::find();
 
         // add conditions that should always apply here
         $dataProvider = new ActiveDataProvider(['query' => $query]);
+        
         $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            $query->where('0=1');
             return $dataProvider;
         }
         // grid filtering conditions
+        
         $query->andFilterWhere([
             'id' => $this->id,
             'modified_at' => $this->modified_at,
@@ -71,6 +74,7 @@ class UsersSearch extends Users
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'phone', $this->phone]);
+            
             return $dataProvider;
     }
 }

@@ -5,9 +5,6 @@ namespace app\controllers;
 use app\models\Users; 
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
-//use yii\filters\auth\CompositeAuth;
-//use yii\filters\auth\HttpBearerAuth;
-//use yii\filters\auth\HttpBasicAuth; 
 use yii\filters\AccessControl;
 use app\controllers\MainController;
 
@@ -18,57 +15,60 @@ class UsersController extends MainController
     public $searchAttr  = 'UsersSearch';
     public $searchModel = '\app\models\UsersSearch';
     public $authModel   = '\app\models\Users';
-
+    public $allowId     =  null;
     
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-
+        
+        // ACF filter for checking user access
         $behaviors['access'] = 
-       // использовано два метода проверки
-       // 1-й проверяем прямо здесь наши роли и действия в секции 'rules'
-       // 2-й здесь задаем набор ролей и соответствующие действия, а проверку 
-       // делаем в AccessRules
-
-       [
+           [
             'class' => AccessControl::className(),
-            // проверка роли залогиненного пользователя с заданными ролями в
-            // правилах реализована в AccessRules class
-                
-             'ruleConfig' => ['class' => AccessRules::className(),],
-
-                'only' => ['create', 'update', 'delete','view'],
+            // check roles AccessRules
+            'ruleConfig' => ['class' => AccessRules::className(),],
+            'only' => ['create', 'update', 'delete','view','index'],
                 'rules' => 
-                   [
-                
+                [
                     [
                     'actions' => ['create'],
                     'allow' => true,
                     'roles' => ['admin','photographer','client'],
                     ],
-            
                     [
-                    'actions' => ['update','view'],
+                    'actions' => ['update','view',],
                     'allow' => true,
-                    'roles' => ['admin', 'photographer','client'],
-                    
+                    'roles' => ['admin', 'photographer','client',],
                     'matchCallback' => function ($rule, $action)
-                    {
-                    if ($this->isAdmin() or $this->isOwner())
-                        return true;
-                    }
+                        {
+                            if ($this->isAdmin() or $this->isOwner())
+                                return true;
+                        }
                     ],
-                
                     [
-                        'actions' => ['delete'],
+                    'actions' => ['index'],
+                    'allow' => true,
+                    'roles' => ['photographer','client','admin'],
+                    'matchCallback' => function ($rule, $action)
+                        {
+                            if ($this->isAdmin()) 
+                                   return true;
+                            if (!$this->isAdmin() and 
+                               (isset(\Yii::$app->request->queryParams["id"])))
+                                   return false;
+                            $this->allowId = 'id';
+                                   return true;
+                        }
+                    ], 
+                    [
+                        'actions' => ['delete',],
                         'allow' => true,
                         'roles' => ['admin'],
                        
                     ],
-                  ],//rules
-         ];
-        
-                return $behaviors;
+                ],//rules
+        ];
+            return $behaviors;
     }
 
     //хелперы

@@ -14,21 +14,7 @@ use yii\filters\VerbFilter;
  */
 class RbacController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    /*public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-*/
+    
     /**
      * Lists all AuthItem models.
      * @return mixed
@@ -38,6 +24,72 @@ class RbacController extends Controller
 
     // создаем разрешения
    
+
+   public function actionCreate_rule_index()
+    {
+        $auth = Yii::$app->authManager;
+
+        // add the rule
+        $rule = new \app\controllers\auth\AllowRule;
+        //$auth->add($rule);
+
+        // добавляем разрешение "updateOwnPost" и привязываем к нему правило.
+        $indexAllowAlbum = $auth->createPermission('indexAllowAlbum');
+       // $indexOwnAlbum->description = 'Index own album';
+        $indexAllowAlbum->ruleName = $rule->name;
+        //$auth->add($indexOwnAlbum);
+
+      //  $indexAlbum = $auth->createPermission('indexAlbum');
+        // "updateOwnPost" будет использоваться из "updatePost"
+       // $auth->addChild($indexAllowAlbum, $indexAlbum);
+        // проверить в таблице item_child photograper -> udateAlbum
+        // удалить, иначе нет правильного наследования или в ролях коммент
+        $photographer = $auth->createPermission('photographer');
+        // разрешаем "автору" обновлять его посты
+        $auth->addChild($photographer, $indexAllowAlbum);
+
+    }
+
+
+    
+public function actionClient()
+{       
+    $auth = Yii::$app->authManager;
+    $rule = new \app\controllers\auth\AllowRule;
+     $auth->add($rule);
+
+        $indexAlbum = $auth->createPermission('indexAlbum');
+        $viewAlbum = $auth->createPermission('viewAlbum');
+     
+
+        $client = $auth->createRole('client');
+        $auth->add($client);
+
+        $auth->addChild($client, $indexAlbum);
+        $auth->addChild($client, $viewAlbum);
+        
+       
+
+
+        // добавляем разрешение "updateOwnPost" и привязываем к нему правило.
+        $viewAllowAlbum = $auth->createPermission('viewAllowAlbum');
+        $viewAllowAlbum->description = 'View allowed album';
+        $viewAllowAlbum->ruleName = $rule->name;
+        $auth->add($viewAllowAlbum);
+        
+        $indexAllowAlbum = $auth->createPermission('indexAllowAlbum');
+        $indexAllowAlbum->description = 'Index allowed album';
+        $indexAllowAlbum->ruleName = $rule->name;
+        $auth->add($indexAllowAlbum);
+        
+        $auth->addChild($viewAllowAlbum, $viewAlbum);
+        $auth->addChild($indexAllowAlbum, $indexAlbum);
+        $client = $auth->createPermission('client');
+        // разрешаем "автору" обновлять его посты
+        $auth->addChild($client, $viewAllowAlbum);
+        $auth->addChild($client, $indexAllowAlbum);
+}
+
 
     public function actionAssignment()
     {
@@ -81,7 +133,7 @@ class RbacController extends Controller
     }
 
 
-    public function actionCreate_rule_udate()
+    public function actionCreate_rule_update()
     {
         $auth = Yii::$app->authManager;
 
@@ -170,10 +222,9 @@ class RbacController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => AuthItem::find(),
         ]);
+       
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+       return $this->render('index', ['dataProvider' => $dataProvider,]);
     }
 
     /**

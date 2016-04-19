@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "albums".
@@ -39,6 +40,7 @@ class Albums extends \yii\db\ActiveRecord
             [['created_at', 'modified_at'], 'safe'],
             [['name'], 'string', 'max' => 50],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'default', 'value' => function() { return  \Yii::$app->user->identity->id;}]
         ];
     }
 //'user_id'
@@ -81,21 +83,20 @@ class Albums extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
     
-    public function beforeSave($insert)
+    public function behaviors()
     {
-        if (parent::beforeSave($insert)) 
-           {
-                if ($this->isNewRecord) 
-                {
-                    // если user_id пустой
-                    if (!$this->user_id) 
-                        {
-                            $createdBy =  \Yii::$app->user->identity;
-                            $this->user_id = $createdBy->id;
-
-                        }
-                }
-            return true;
-            }
-    }
+        $behaviors = parent::behaviors();
+        $behaviors ['createdBy'] = 
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => $this->user_id,
+                'updatedByAttribute' => $this->user_id,
+                
+            ];
+        return $behaviors;
 }
+
+
+
+}
+

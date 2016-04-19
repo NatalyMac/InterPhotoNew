@@ -16,38 +16,33 @@ use app\components\AccessRule;
 class MainController extends ActiveController {
 
 
-    public $reservedParams = ['sort','q'];
-    //полное имя класса модели, используемой для поиска, '\app\models\UsersSearch'
-    public $searchModel = Null;
-    //имя атрибута поиска = имя модели поиска, 'UsersSearch'
-    public $searchAttr = Null;
-    // полное имя модели, которая используется для хранения пользователей
-    // '\app\models\Users'
-    public $authModel = Null;
-    //имя модели для findNeedModel
-    public $nameModel = Null;
+    public $reservedParams   = ['sort','q'];
+    // full name of model for searching, '\app\models\UsersSearch'
+    public $searchModel     = null;
+    // name of atrr for searching  = name model, 'UsersSearch'
+    public $searchAttr       = null;
+    // full name of users model '\app\models\Users'
+    public $authModel        = null;
+    // name model for AuthorRule
+    public $nameModel        = null;
+    // filter for indexDataProvider or id or user_id, depending of models
+    public $allowId          = null;
 
-    
-    //запрос с фильтром по атрибутам типа GET controller?attribute='...'
-    // переопределяем метод prepareDataProvider, который подготовит нам 
-    //отсортированные данные
     public function actions() 
     {   
         $actions = parent::actions();
 
-        // переопределяем метод prepareDataProvider, который подготовит нам 
-        //отсортированные данные
+        // method for filter collection of models via GET parametrs
         $actions['index']['prepareDataProvider'] = [$this, 'indexDataProvider'];
-        //var_dump($actions['index']['prepareDataProvider']);
-        
+      
         // переопределяем для вывода по дополнительному запросу списка связанных с заданным id
         // заданной модели записей, например, users/22/?albums
-        $actions['view']['findModel']= [$this, 'viewfindModel'];    
+        //   $actions['view']['findModel']= [$this, 'viewfindModel'];    
 
             return $actions;
     
     }
-    
+    /*
     public function viewFindModel() 
     {
         $params = \Yii::$app->request->queryParams;
@@ -68,103 +63,88 @@ class MainController extends ActiveController {
             $searchModel = new $this->searchModel();
                 return $searchModel->searchLinkItems($search);
     }
+*/
 
-
-    // данные для поиска -> в модель -> отфильтрованные данные из модели
+    // filter collection of models via GET parametrs
     public function indexDataProvider() 
     {
-	 
-        $params = \Yii::$app->request->queryParams;
-        $model = new $this->modelClass;
-      
-        $modelAttr = $model->attributes;
-        
-        // здесь соберем фильтрующий набор ( 'key' => 'value' )
-        // по условиям: не содержит зарезервированных слов, 
-        // содержит только скалярные величины,
-        // 'key' есть среди атрибутов модели
-        $search = [];
-        if (!empty($params)) {
-            
-            foreach ($params as $key => $value) {
-                
-                // скалярность
-                if(!is_scalar($key) or !is_scalar($value)) {
-                    throw new BadRequestHttpException('400 Bad Request',400);
-                }
-                
-                // есть среди атрибутов модели и не зарезервированные слова
-                if (!in_array(strtolower($key), $this->reservedParams) 
-                    && ArrayHelper::keyExists($key, $modelAttr, false)) {
-                    $search[$key] = $value;
-                }
-            }
-        }
+        // get filter params
+        $search = $this->getFilterParams();
+        //set filter for current id or user_id 
+        $search[$this->allowId] = \Yii::$app->user->identity->id;
+                 
         $searchByAttr[$this->searchAttr] = $search;
-        // для поиска пользуемся сгенерированным в Gii классом, 
-        //которому передаем наш фильтрующий набор 
+            
         $searchModel = new $this->searchModel();
         
-            // возвращаем отфильтрованные данные
             return $searchModel->search($searchByAttr);
+           
     }
 
+    public function getFilterParams()
+    {
+        $params = \Yii::$app->request->queryParams;
+        $model = new $this->modelClass;
+        $modelAttr = $model->attributes;
+        
+        // filter
+        $search = [];
+            if (!empty($params)) 
+            {
+                foreach ($params as $key => $value) 
+                {
+                    if(!is_scalar($key) or !is_scalar($value)) {
+                        throw new BadRequestHttpException('400 Bad Request',400);
+                    }
+                    // not reserved words and model attributes
+                    if (!in_array(strtolower($key), $this->reservedParams) 
+                        && ArrayHelper::keyExists($key, $modelAttr, false)) 
+                        $search[$key] = $value;
+                }
+            } 
+        return $search;
+    }
 
-    // аутентификация пользователей
+    // user authentithisashion
     public function behaviors()
-        {
+    {
             $behaviors = parent::behaviors();
 
-            $behaviors['authenticator'] = [
-            'class' => CompositeAuth::className(),
-            'authMethods' => [
-               [
-                'class' => HttpBasicAuth::className(),
-                'auth' => function($username, $password)
-                    {  
-                        $authUser = $this->validateUser($username, $password);
-                        // раскомментить для работы
-                       // $this -> setToken($authUser);
-                            return $authUser;
-                    }
+            $behaviors['authenticator'] = 
+            [
+                'class' => CompositeAuth::className(),
+                'authMethods' => 
+                [
+                    [
+                        'class' => HttpBasicAuth::className(),
+                        'auth' => function($username, $password)
+                            {  
+                                $authUser = $this->validateUser($username, $password);
+                                // uncomment for work
+                                // $this -> setToken($authUser);
+                                    return $authUser;
+                            }
+                    ],
                 
-               ],
-                
-               'class' => HttpBearerAuth::className(),
-             ],
-        ];
-      return $behaviors; 
+                'class' => HttpBearerAuth::className(),
+                ],
+            ];
+            return $behaviors; 
     }
 
-    public function beforeAction($action)
-        {
-         // your custom code here, if you want the code to run before action filters,
-         // wich are triggered on the [[EVENT_BEFORE_ACTION]] event, e.g. PageCache or AccessControl
-    
-            if (!parent::beforeAction($action)) {
-                return false;
-            }
-    
-         // other custom code here
-     
-                return true; // or false to not run the action
-    }
-    
-    // генерируем токен для каждого экшена
+    // new token after evere action
     public function afterAction($action, $result)
-        {
+    {
             $result = parent::afterAction($action, $result);
-            // генерация токена после каждого запроса
-            // расскоментить
+            // uncomment for work
             // $authUser = \Yii::$app->user->identity;
             // $this->setToken($authUser);
-            // your custom code here
         return $result;
     }
 
-    // хелперы
-    // модель для author rule в rbac
-    public function findNeededModel($id)
+    // helpers
+    // model for author rule rbac
+    public function findModelAuthorRule($id)
     {
         $nameModel = $this->nameModel;
         if (($model = $nameModel::findOne($id)) !== null) {
@@ -174,7 +154,6 @@ class MainController extends ActiveController {
         }
     }
     
-    //проверка имени пароля, возврат объект юзера
     public function validateUser($username, $password)
     {
         $authUser = null;
@@ -187,7 +166,7 @@ class MainController extends ActiveController {
         }   
     }
     
-    // генерируем токен для юзера, что прошел проверку
+    // set and send token for validated user
     public function setToken($authUser)
     {
         if (!$authUser) throw new  BadRequestHttpException('Bad Request',400);
