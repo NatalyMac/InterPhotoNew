@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+
 use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
@@ -13,8 +14,9 @@ use yii\filters\AccessControl;
 use yii\base\ActionFilter;
 use app\components\AccessRule;
 
-class MainController extends ActiveController {
 
+class MainController extends ActiveController 
+{
 
     public $reservedParams   = ['sort','q'];
     // full name of model for searching, '\app\models\UsersSearch'
@@ -31,49 +33,19 @@ class MainController extends ActiveController {
     public function actions() 
     {   
         $actions = parent::actions();
-
-        // method for filter collection of models via GET parametrs
+        // method for filtering collection of models  
         $actions['index']['prepareDataProvider'] = [$this, 'indexDataProvider'];
-      
-        // переопределяем для вывода по дополнительному запросу списка связанных с заданным id
-        // заданной модели записей, например, users/22/?albums
-        //   $actions['view']['findModel']= [$this, 'viewfindModel'];    
-
-            return $actions;
+        return $actions;
     
     }
-    /*
-    public function viewFindModel() 
-    {
-        $params = \Yii::$app->request->queryParams;
-        $search = [];
-        if (!empty($params)) 
-           {
-            foreach ($params as $key => $value) 
-                {
-                // скалярность
-                if(!is_scalar($key) or !is_scalar($value)) {
-                    throw new BadRequestHttpException('400 Bad Request', 400);
-                }
-                // не зарезервированные слова
-                if (!in_array(strtolower($key), $this->reservedParams)) 
-                    $search[$key] = $value;
-                }
-            }   
-            $searchModel = new $this->searchModel();
-                return $searchModel->searchLinkItems($search);
-    }
-*/
 
-    // filter collection of models via GET parametrs
     public function indexDataProvider() 
     {
-        // get filter params
-        $search = $this->getFilterParams();
-        //set filter for current id or user_id 
-        $search[$this->allowId] = \Yii::$app->user->identity->id;
+        $filter = $this->getFilterParams();
+        //set key  as id or user_id (depending on model) => current user
+        $filter[$this->allowId] = \Yii::$app->user->identity->id;
                  
-        $searchByAttr[$this->searchAttr] = $search;
+        $searchByAttr[$this->searchAttr] = $filter;
             
         $searchModel = new $this->searchModel();
         
@@ -87,8 +59,8 @@ class MainController extends ActiveController {
         $model = new $this->modelClass;
         $modelAttr = $model->attributes;
         
-        // filter
-        $search = [];
+        // filter key => value array from GET request
+        $filter = [];
             if (!empty($params)) 
             {
                 foreach ($params as $key => $value) 
@@ -99,13 +71,13 @@ class MainController extends ActiveController {
                     // not reserved words and model attributes
                     if (!in_array(strtolower($key), $this->reservedParams) 
                         && ArrayHelper::keyExists($key, $modelAttr, false)) 
-                        $search[$key] = $value;
+                        $filter[$key] = $value;
                 }
             } 
-        return $search;
+        return $filter;
     }
 
-    // user authentithisashion
+    // user authentication
     public function behaviors()
     {
             $behaviors = parent::behaviors();
@@ -132,7 +104,7 @@ class MainController extends ActiveController {
             return $behaviors; 
     }
 
-    // new token after evere action
+    // new token after every action
     public function afterAction($action, $result)
     {
             $result = parent::afterAction($action, $result);

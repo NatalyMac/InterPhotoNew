@@ -27,9 +27,9 @@ $config = [
 
             'loginUrl' => null,
         ],
-      //  'errorHandler' => [
+        //  'errorHandler' => [
         //    'errorAction' => 'site/error',
-       // ],
+        // ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set
@@ -51,9 +51,19 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-               ['class' => 'yii\rest\UrlRule', 'controller' => ['users', 'albums']],
-            ],
+            'rules' => 
+            [
+                ['class' => 'yii\rest\UrlRule', 
+                'controller' => 'users',
+                ],
+                ['class' => 'yii\rest\UrlRule', 
+                'controller' => 'albums',
+                'extraPatterns' => 
+                    [
+                    'GET <id:\d+>/<images>' => 'images',
+                    ]
+                ],
+           ],
         ],
         
     ],

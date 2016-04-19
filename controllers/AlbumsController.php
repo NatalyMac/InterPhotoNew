@@ -4,12 +4,8 @@ namespace app\controllers;
 use app\models\Users; 
 use app\models\Albums;
 use app\controllers\auth\AuthorRule;
-
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
-//use yii\filters\auth\CompositeAuth;
-//use yii\filters\auth\HttpBearerAuth;
-//use yii\filters\auth\HttpBasicAuth; 
 use yii\filters\AccessControl;
 use app\controllers\MainController;
  
@@ -17,16 +13,13 @@ use app\controllers\MainController;
 class AlbumsController extends MainController
 {
     public $modelClass  = '\app\models\Albums';
-    
     public $searchAttr  = 'AlbumsSearch';
     public $searchModel = '\app\models\AlbumsSearch';
     public $authModel   = '\app\models\Users';
     public $nameModel   = '\app\models\Albums';
 
- /*
- 
-*/
- public function behaviors()
+
+public function behaviors()
     {
         $behaviors = parent::behaviors();
        
@@ -34,7 +27,7 @@ class AlbumsController extends MainController
 //check Access RBAC
        $behaviors['access'] = [
                 'class' => AccessControl::className(),
-                'only' => ['create', 'update', 'delete','view','index'],
+                'only' => ['create', 'update', 'delete','view','index', 'images'],
                 'rules' => [
                     [
                         'actions' => ['delete'],
@@ -82,6 +75,16 @@ class AlbumsController extends MainController
                                 return true;
                         }
                     ],
+                    [
+                        'actions' => ['images'],
+                        'allow' => true,
+                        'matchCallback' => function ($rule, $action)
+                        {
+                            if(\Yii::$app->user->can('indexImages'))
+                                return true;
+                        }
+                    ],
+
                 ],
             
         ];
@@ -89,4 +92,11 @@ class AlbumsController extends MainController
 
     return $behaviors;
    }
+   
+    public function actionImages()
+    {
+        $params = \Yii::$app->request->queryParams;
+        $query = Albums::findOne($params['id']);
+            return $query->albumImages;
+    }
 }

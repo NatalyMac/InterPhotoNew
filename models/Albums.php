@@ -5,33 +5,15 @@ namespace app\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 
-/**
- * This is the model class for table "albums".
- *
- * @property integer $id
- * @property integer $user_id
- * @property string $name
- * @property integer $active
- * @property string $created_at
- * @property string $modified_at
- *
- * @property AlbumClients[] $albumClients
- * @property AlbumImages[] $albumImages
- * @property Users $user
- */
 class Albums extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
+   
     public static function tableName()
     {
         return 'albums';
     }
 
-    /**
-     * @inheritdoc
-     */
+   
     public function rules()
     {
         return [
@@ -43,10 +25,7 @@ class Albums extends \yii\db\ActiveRecord
             [['user_id'], 'default', 'value' => function() { return  \Yii::$app->user->identity->id;}]
         ];
     }
-//'user_id'
-    /**
-     * @inheritdoc
-     */
+
     public function attributeLabels()
     {
         return [
@@ -59,25 +38,20 @@ class Albums extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+    
+    //return \yii\db\ActiveQuery
     public function getAlbumClients()
     {
         return $this->hasMany(AlbumClients::className(), ['album_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+    //return \yii\db\ActiveQuery
     public function getAlbumImages()
     {
         return $this->hasMany(AlbumImages::className(), ['album_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+    //return \yii\db\ActiveQuery
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);

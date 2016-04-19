@@ -2,11 +2,8 @@
 namespace app\controllers\auth;
 
 use yii\rbac\Rule;
-//use app\models\Albums;
 
-/**
- * Проверяем authorID на соответствие с пользователем, переданным через параметры
- */
+//check user_id and 'id' from request  
 class AuthorRule extends Rule
 {
     public $name = 'isAuthor';
@@ -19,11 +16,12 @@ class AuthorRule extends Rule
      */
     public function execute($user, $item, $params)
     {
-   
         if (isset($params['model'])) $model = $params['model'];
    
         $id = \Yii::$app->request->queryParams['id'];
+        
         $model = \Yii::$app->controller->findModelAuthorRule($id);
+            
             return $model->user_id === $user;
     }
 }

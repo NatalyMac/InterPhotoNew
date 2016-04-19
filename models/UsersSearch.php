@@ -8,9 +8,6 @@ use yii\data\ActiveDataProvider;
 use app\models\Users;
 use yii\web\BadRequestHttpException;
 
-/**
- * UsersSearch represents the model behind the search form about `app\models\Users`.
- */
 class UsersSearch extends Users
 {
     public function rules()
@@ -27,26 +24,6 @@ class UsersSearch extends Users
         return Model::scenarios();
     }
 
-   /* public function searchLinkItems($params)
-    {
-        if (array_key_exists('id', $params) and count($params)==1)
-           {
-                $query = Users::findOne($params['id']);
-                return $query;
-            }; 
-        if (count($params)==2 and array_key_exists('albums', $params) 
-                              and array_key_exists('id', $params))
-            {
-                $query = Users::find()->where(['id' => $params['id']])->one();
-                return $query->albums;
-            }
-        else {
-                throw new BadRequestHttpException('400 Bad Request',400);
-            }
-    
-    } 
-
-*/
     public function search($params)
     {
         $query = Users::find();

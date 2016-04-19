@@ -11,7 +11,6 @@ use app\controllers\MainController;
 class UsersController extends MainController
 {
     public $modelClass  = '\app\models\Users';
-
     public $searchAttr  = 'UsersSearch';
     public $searchModel = '\app\models\UsersSearch';
     public $authModel   = '\app\models\Users';

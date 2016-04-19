@@ -25,6 +25,32 @@ class RbacController extends Controller
     // создаем разрешения
    
 
+public function actionCreate_images()
+{
+    $auth = Yii::$app->authManager;
+    $indexImages = $auth->createPermission('indexImages');
+    $indexImages->description = 'Index images';
+    $auth->add($indexImages);
+    
+    $indexAllowImages = $auth->createPermission('indexAllowImages');
+    $indexAllowImages->description = 'Index allow images';
+    $auth->add($indexAllowImages);
+
+    $indexAlbum = $auth->createPermission('indexAlbum');
+    $indexAllowAlbum = $auth->createPermission('indexAllowAlbum');
+    $auth->addChild($indexImages, $indexAlbum);
+    $auth->addChild($indexAllowImages, $indexImages);
+
+    $photographer = $auth->createPermission('photographer');
+    $client = $auth->createPermission('client');
+    $admin = $auth->createPermission('admin');    
+
+    $auth->addChild($photographer, $indexAllowImages);
+    $auth->addChild($admin, $indexImages);
+    $auth->addChild($client, $indexAllowImages);
+
+}
+
    public function actionCreate_rule_index()
     {
         $auth = Yii::$app->authManager;

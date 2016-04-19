@@ -22,13 +22,21 @@ class AllowRule extends Rule
     {
         $user_id = null;
         $id = \Yii::$app->user->identity->id;
-    
+
         if (isset(\Yii::$app->request->queryParams['user_id'])) 
             $user_id = \Yii::$app->request->queryParams['user_id'];
-            \Yii::$app->controller->allowId = 'user_id';    
+
+        if (isset(\Yii::$app->request->queryParams['id'])) { 
+            $id_item = \Yii::$app->request->queryParams['id'];
+            $model = \Yii::$app->controller->findModelAuthorRule($id_item);
+            $user_id = $model->user_id;
+        }
+           
+        \Yii::$app->controller->allowId = 'user_id';    
         
         if (($user_id == $id) or ($user_id == null))
             return true;
+        
         if ($user_id !== $id) 
             return false;
     }

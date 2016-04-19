@@ -10,40 +10,14 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 
-/**
- * This is the model class for table "users".
- *
- * @property integer $id
- * @property string $access_token
- * @property string $role
- * @property string $name
- * @property string $username
- * @property string $password
- * @property string $phone
- * @property string $modified_at
- * @property string $created_at
- * @property string $auth_key
- * @property string $password_hash
- *
- * @property AlbumClients[] $albumClients
- * @property Albums[] $albums
- * @property Orders[] $orders
- * @property UserPackages[] $userPackages
- */
 class Users extends \yii\db\ActiveRecord implements IdentityInterface
 {
 
-    /**
-     * @inheritdoc
-     */
     public static function tableName()
     {
         return 'users';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -64,11 +38,9 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
 public function fields()
 {
     $fields = parent::fields();
-
-    // удаляем не безопасные поля
+    // unset unsafely fields
     unset($fields['auth_key'], $fields['password_hash'], $fields['access_token']);
-
-    return $fields;
+        return $fields;
 }
 
 public function extraFields()
@@ -76,9 +48,6 @@ public function extraFields()
     return ['albums'];
 }
 
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels()
     {
         return [
@@ -96,45 +65,37 @@ public function extraFields()
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+    
     public function getAlbumClients()
     {
         return $this->hasMany(AlbumClients::className(), ['user_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+   
     public function getAlbums()
     {
         return $this->hasMany(Albums::className(), ['user_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+  
     public function getOrders()
     {
         return $this->hasMany(Orders::className(), ['user_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+    
     public function getUserPackages()
     {
         return $this->hasMany(UserPackages::className(), ['user_id' => 'id']);
     }
 
-    // поиск
+    
     public static function findByUsername($username)
     {
         return static::findOne(['username' => $username]);
     }
 
-    // хелперы
+    // helpers
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
@@ -150,7 +111,7 @@ public function extraFields()
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
  
-    //аутентификация
+    //authentication
     public function getId()
     {
         return $this->id;
