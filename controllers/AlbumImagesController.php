@@ -4,18 +4,23 @@ namespace app\controllers;
 
 use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
-use yii\web\BadRequestHttpException;
-use yii\web\NotFoundHttpException;
-use yii\filters\auth\CompositeAuth;
-use yii\filters\auth\HttpBearerAuth;
-use yii\filters\auth\HttpBasicAuth; 
+//use yii\web\BadRequestHttpException;
+//use yii\web\NotFoundHttpException;
+//use yii\filters\auth\CompositeAuth;
+//use yii\filters\auth\HttpBearerAuth;
+//e yii\filters\auth\HttpBasicAuth; 
 use yii\filters\AccessControl;
 use yii\base\ActionFilter;
-use app\components\AccessRule;
+//use app\components\AccessRule;
 use app\models\Users; 
 use app\models\Albums;
 
-class AlbumImagesController extends ActiveController {
+class AlbumImagesController extends MainController {
 
-     public $modelClass  = '\app\models\AlbumImages';
+    public $modelClass  = '\app\models\AlbumImages';
+  
+    public $searchAttr  = 'AlbumImagesSearch';
+    public $searchModel = '\app\models\AlbumImagesSearch';
+    public $authModel   = '\app\models\Users';
+    public $allowId     =  null;
 }

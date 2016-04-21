@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\models\Users; 
 use yii\helpers\ArrayHelper;
-use yii\web\BadRequestHttpException;
+//use yii\web\BadRequestHttpException;
 use yii\filters\AccessControl;
 use app\controllers\MainController;
 

@@ -38,7 +38,11 @@ class Albums extends \yii\db\ActiveRecord
         ];
     }
 
-    
+    public function extraFields()
+    {
+    return ['albumImages'];
+    }
+
     //return \yii\db\ActiveQuery
     public function getAlbumClients()
     {

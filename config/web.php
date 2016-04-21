@@ -1,11 +1,23 @@
 <?php
 
+use yii\web\Response;
+
 $params = require(__DIR__ . '/params.php');
 
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+       [
+        'class' => 'yii\filters\ContentNegotiator',
+           'formats' => [
+           'application/json' => Response::FORMAT_JSON,
+            'application/xml' => Response::FORMAT_XML,
+            ],
+        ],
+        'log',
+        ],
+
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
@@ -17,6 +29,7 @@ $config = [
             'parsers'=> [
                 'application/json' =>'yii\web\JsonParser'],
         ],
+   
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -27,8 +40,8 @@ $config = [
 
             'loginUrl' => null,
         ],
-        //  'errorHandler' => [
-        //    'errorAction' => 'site/error',
+        //'errorHandler' => [
+        //  'errorAction' => 'site/error',
         // ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -60,7 +73,7 @@ $config = [
                 'controller' => 'albums',
                 'extraPatterns' => 
                     [
-                    'GET <id:\d+>/<images>' => 'images',
+                    'GET <id:\d+>/images' => 'images',
                     ]
                 ],
            ],
