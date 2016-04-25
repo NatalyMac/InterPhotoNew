@@ -140,7 +140,6 @@ public function extraFields()
         $key = md5(serialize($options));
             if ($cache->get($key)) {
                 $result = $cache->get($key);
-                var_dump($result);
             } else {
                 $result = static::findOne(['access_token' => $token]);
                 $cache->set($key, $result);
