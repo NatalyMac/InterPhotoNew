@@ -5,9 +5,10 @@ use app\models\Users;
 use app\models\Albums;
 use app\controllers\auth\AuthorRule;
 use yii\helpers\ArrayHelper;
-use yii\web\BadRequestHttpException;
+//use yii\web\BadRequestHttpException;
 use yii\filters\AccessControl;
 use app\controllers\MainController;
+use yii\web\NotFoundHttpException;
  
 
 class AlbumsController extends MainController
@@ -95,8 +96,20 @@ public function behaviors()
    
     public function actionImages()
     {
-        $params = \Yii::$app->request->queryParams;
-        $query = Albums::findOne($params['id']);
-            return $query->albumImages;
+       // $params = \Yii::$app->request->queryParams;
+       // $query = Albums::findOne($params['id']);
+        //    return $query->albumImages;
+    
+      if ($all_immages = Albums::findOne(\Yii::$app->request->queryParams['id'])) {
+            return $all_immages->albumImages;
+        } else {  
+            throw new NotFoundHttpException($message = "Object not found: " . \Yii::$app->request->queryParams['id']);  
+        }
+    
+
+
+
+
+
     }
 }

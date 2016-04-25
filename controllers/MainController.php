@@ -6,7 +6,7 @@ namespace app\controllers;
 use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
 //use yii\web\BadRequestHttpException;
-//use yii\web\NotFoundHttpException;
+use yii\web\NotFoundHttpException;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpBasicAuth; 
@@ -106,6 +106,7 @@ class MainController extends ActiveController
     }
 
     // new token after every action
+   /*
     public function afterAction($action, $result)
     {
             $result = parent::afterAction($action, $result);
@@ -114,6 +115,7 @@ class MainController extends ActiveController
             // $this->setToken($authUser);
         return $result;
     }
+    */
 
     // helpers
     // model for author rule rbac
@@ -134,7 +136,10 @@ class MainController extends ActiveController
         $user = $authModel::findByUsername($username);
                        
         if($user!=null and $password!=null) {
-            if($user->validatePassword($password)) $authUser = $user;
+            if($user->validatePassword($password)) {
+               $authUser = $user;
+               $this->setToken($authUser);
+            }
             return $authUser;
         }   
     }
@@ -145,6 +150,7 @@ class MainController extends ActiveController
         if (!$authUser) throw new  BadRequestHttpException('Bad Request',400);
          
         $authUser->generateAccessToken();
+        
         $authHeader = $authUser->access_token;
         $response = \Yii::$app->response;
         $response->getHeaders()->set('Autorization', 'Bearer '.$authHeader);

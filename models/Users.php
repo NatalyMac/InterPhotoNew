@@ -135,8 +135,20 @@ public function extraFields()
  
     public static function findIdentityByAccessToken($token, $type = null)
     {   
-        return static::findOne(['access_token' => $token]);
-    }
+        $cache = Yii::$app->cache;
+        $options = [$token,$type];
+        $key = md5(serialize($options));
+            if ($cache->get($key)) {
+                $result = $cache->get($key);
+                var_dump($result);
+            } else {
+                $result = static::findOne(['access_token' => $token]);
+                $cache->set($key, $result);
+            }  
+    
+        return $result; 
+        //return static::findOne(['access_token' => $token]);
+}
 
     public function generateAccessToken()
     {

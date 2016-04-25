@@ -31,8 +31,19 @@ $config = [
         ],
    
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            //'class' => 'yii\caching\FileCache',
+            'class' => 'yii\caching\MemCache',
+            'servers' => [
+                [
+                    'host' => '127.0.0.1',
+                    'port' => 11211,
+                    'weight' => 600,
+                ],
+            ],
+            'useMemcached' => false,
+            'keyPrefix' => '',
         ],
+
         'user' => [
             'identityClass' => 'app\models\Users',
             'enableAutoLogin' => true,
@@ -63,12 +74,14 @@ $config = [
         
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'cache' => false,
             'showScriptName' => false,
             'rules' => 
             [
                 ['class' => 'yii\rest\UrlRule', 
                 'controller' => 'users',
                 ],
+
                 ['class' => 'yii\rest\UrlRule', 
                 'controller' => 'albums',
                 'extraPatterns' => 

@@ -5,7 +5,7 @@ namespace app\controllers;
 use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
 //use yii\web\BadRequestHttpException;
-//use yii\web\NotFoundHttpException;
+use yii\web\NotFoundHttpException;
 //use yii\filters\auth\CompositeAuth;
 //use yii\filters\auth\HttpBearerAuth;
 //e yii\filters\auth\HttpBasicAuth; 
