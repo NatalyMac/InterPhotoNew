@@ -2,21 +2,59 @@
 
 namespace app\controllers;
 
-use app\models\Users; 
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
-use yii\filters\AccessControl;
-use app\controllers\MainController;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
+use yii\filters\auth\HttpBasicAuth; 
+use app\models\Users; 
+use app\controllers\MainController;
+use app\controllers\auth\LoginAction;
 
 class UsersController extends MainController
 {
     public $modelClass  = '\app\models\Users';
+    
     public $searchAttr  = 'UsersSearch';
     public $searchModel = '\app\models\UsersSearch';
     public $authModel   = '\app\models\Users';
     public $allowId     =  null;
+    public $model       = 'User';
+    //public $nameModel   = '\app\models\Users';
+    public $linkedModel = null;
     
+  /*
+    public function actions() 
+        {   
+            $actions = parent::actions();
+            $actions['login'] = [
+                'class' => 'app\controllers\auth\LoginAction',
+                'modelClass' => $this->modelClass,
+             ];
+           return $actions;
+        }
+*/
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -27,11 +65,11 @@ class UsersController extends MainController
             'class' => AccessControl::className(),
             // check roles AccessRules
             'ruleConfig' => ['class' => AccessRules::className(),],
-            'only' => ['create', 'update', 'delete','view','index'],
+            'only' => ['create', 'update', 'delete','view','index',],
                 'rules' => 
                 [
                     [
-                    'actions' => ['create'],
+                    'actions' => ['create',],
                     'allow' => true,
                     'roles' => ['admin','photographer','client'],
                     ],
@@ -68,10 +106,9 @@ class UsersController extends MainController
                     ],
                 ],//rules
         ];
-            return $behaviors;
-    }
 
-    //хелперы
+        return $behaviors;
+    }
 
     public function isAdmin()
     {
@@ -84,6 +121,4 @@ class UsersController extends MainController
         if ((int) \Yii::$app->user->identity->id === (int) \Yii::$app->request->queryParams['id'])
                         return true;
     }
-
-}
-
+*/

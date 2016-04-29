@@ -10,8 +10,9 @@ $config = [
     'bootstrap' => [
        [
         'class' => 'yii\filters\ContentNegotiator',
-           'formats' => [
-           'application/json' => Response::FORMAT_JSON,
+            'formats' => 
+            [
+            'application/json' => Response::FORMAT_JSON,
             'application/xml' => Response::FORMAT_XML,
             ],
         ],
@@ -46,7 +47,7 @@ $config = [
 
         'user' => [
             'identityClass' => 'app\models\Users',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
             'enableSession' => false,
 
             'loginUrl' => null,
@@ -73,11 +74,22 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
         
         'urlManager' => [
-            'enablePrettyUrl' => true,
+            //'enablePrettyUrl' => true,
             'cache' => false,
             'showScriptName' => false,
             'rules' => 
             [
+                ['class' => 'yii\rest\UrlRule', 
+                'controller' => 'auth',
+                'extraPatterns' => 
+                    ['POST login'    => 'login',
+                     'POST reset'    => 'ask-reset',
+                     'PUT  reset'    => 'do-reset',
+                     'HEAD reset'    => 'state-reset',
+                     'DELETE logout' => 'logout',
+                    ]
+                ],
+
                 ['class' => 'yii\rest\UrlRule', 
                 'controller' => 'users',
                 ],
@@ -85,8 +97,13 @@ $config = [
                 ['class' => 'yii\rest\UrlRule', 
                 'controller' => 'albums',
                 'extraPatterns' => 
-                    [
-                    'GET <id:\d+>/images' => 'images',
+                    ['GET <id:\d+>/images'                   => 'index-images',
+                     'GET <id:\d+>/images/<image_id:\d+>'    => 'view-images',
+                     'PUT <id:\d+>/images/<image_id:\d+>'    => 'update-images',
+                     'POST <id:\d+>/images'                  => 'create-images',
+                     'DELETE <id:\d+>/images/<image_id:\d+>' => 'delete-images',
+                     '<id:\d+>/images/<image_id:\d+>'        => 'options-images',
+                     '<id:\d+>/images/'                      => 'options-images',
                     ]
                 ],
            ],

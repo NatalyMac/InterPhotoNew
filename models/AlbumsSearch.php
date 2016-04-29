@@ -26,8 +26,16 @@ class AlbumsSearch extends Albums
     
     public function search($params)
     {
-        $query = Albums::find();
-
+        $cache = Yii::$app->cache;
+        $key = md5(serialize($params));
+        if ($cache->get($key)) 
+            {
+                $query = $cache->get($key);
+        } else {
+            $query = Albums::find();
+            $cache->set($key, $query);
+        }
+        
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -56,3 +64,5 @@ class AlbumsSearch extends Albums
         return $dataProvider;
     }
 }
+
+

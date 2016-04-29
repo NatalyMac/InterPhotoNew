@@ -42,12 +42,15 @@ function getDumpCache($memcache)
     foreach (array_keys($cache['items']) as $item)
         {
             $items = $memcache->getStats('cachedump', $item);
+            var_dump($items);
             // number of item in the object (ass array) in the cache dump, dump like array
             $cache_item_num = 0;
             foreach(array_keys($items) as $cache_key)
                {
+                var_dump($cache_key);
                     //data from cache by key
                     $cache_data = $memcache->get($cache_key);
+                    var_dump($cache_data);
                     $cache_dump[$cache_obj_num][$cache_item_num] = cacheStringToArray($cache_data,$cache_key);
                     $cache_item_num ++;
                 };

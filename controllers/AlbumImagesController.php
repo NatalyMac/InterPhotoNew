@@ -24,3 +24,14 @@ class AlbumImagesController extends MainController {
     public $authModel   = '\app\models\Users';
     public $allowId     =  null;
 }
+
+public function actionIndexImages()
+{
+    /*if ($images = Albums::findOne(\Yii::$app->request->queryParams['id']))
+    {
+        return $images->albumImages;
+    } else {  
+        throw new NotFoundHttpException($message = "Object not found: " . \Yii::$app->request->queryParams['id']); 
+            }*/
+            return 'hello';
+}

@@ -17,11 +17,16 @@ class AuthorRule extends Rule
     public function execute($user, $item, $params)
     {
         if (isset($params['model'])) $model = $params['model'];
-   
-        $id = \Yii::$app->request->queryParams['id'];
-        
-        $model = \Yii::$app->controller->findModelAuthorRule($id);
-            
-            return $model->user_id === $user;
+        if (\Yii::$app->request->queryParams) 
+        {
+          $id = \Yii::$app->request->queryParams['id'];
+          $model = \Yii::$app->controller->findModelAuthorRule($id);
+          return $model->user_id === \Yii::$app->user->identity->id;
+      } 
+      else {
+         \Yii::$app->controller->allowId = 'id';  
+        return true;
+      }
+
     }
 }

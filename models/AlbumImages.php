@@ -14,18 +14,20 @@ class AlbumImages extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['album_id', 'image'], 'required'],
+            [[ 'image'], 'required'],
             [['album_id'], 'integer'],
             [['image'], 'string'],
             [['created_at'], 'safe'],
             [['album_id'], 'exist', 'skipOnError' => true, 'targetClass' => Albums::className(), 'targetAttribute' => ['album_id' => 'id']],
+            [['album_id'], 'default', 'value' => function() {return \Yii::$app->request->queryParams['id'];}
+            ],
         ];
     }
 
     public function fields() 
     {
     $fields = parent::fields();
-    // because of the json worning, comment for working
+    // because of the json worning, unset for working
     unset($fields['image']);
 
     return $fields;

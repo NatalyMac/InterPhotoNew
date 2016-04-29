@@ -110,7 +110,37 @@ public function extraFields()
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
+
+    public function generateAccessToken()
+    {
+        $this->access_token = Yii::$app->security->generateRandomString();
+        $this->update();
+    }
  
+    public static function validateUser($username, $password)
+    {   
+        $authUser = null;
+        $authUser = static::findByUsername($username);
+        if ($authUser!=null and $password!=null) 
+        {
+            if ($authUser->validatePassword($password)) 
+            { 
+                $authUser->generateAccessToken();
+                return $authUser;
+            }
+        } 
+    }
+
+    public static function resetToken($token)
+    {
+        $authUser = static::findIdentityByAccessToken($token);
+        if (!$authUser) return false;
+            $authUser->access_token = '';
+            $authUser->update();
+        return true;
+   }
+
+
     //authentication
     public function getId()
     {
@@ -135,24 +165,8 @@ public function extraFields()
  
     public static function findIdentityByAccessToken($token, $type = null)
     {   
-        $cache = Yii::$app->cache;
-        $options = [$token,$type];
-        $key = md5(serialize($options));
-            if ($cache->get($key)) {
-                $result = $cache->get($key);
-            } else {
-                $result = static::findOne(['access_token' => $token]);
-                $cache->set($key, $result);
-            }  
-    
-        return $result; 
-        //return static::findOne(['access_token' => $token]);
-}
-
-    public function generateAccessToken()
-    {
-        $this->access_token = Yii::$app->security->generateRandomString();
-        $this->update();
+        $result = static::findOne(['access_token' => $token]);
+             return $result; 
     }
 
     public function beforeSave($insert)
@@ -168,13 +182,11 @@ public function extraFields()
                 $this->setPassword($this->password);   
                 $this->generateAuthKey($this->auth_key);
             }
-
                 return true;
 
         } else {
             return false;
-        }
-        
+        }   
     }
     
     public function afterSave($insert, $attrs)
@@ -186,7 +198,7 @@ public function extraFields()
         } else { 
             return false;
         }
-}
+    }
 
     public function roleAssignment()
     {
@@ -200,7 +212,6 @@ public function extraFields()
                     $current_role = $auth->createRole($role->name);
                     $auth->assign($current_role, $this->id);
                 }
-     
         }
      return true;  
     }

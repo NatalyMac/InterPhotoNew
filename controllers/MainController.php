@@ -2,17 +2,15 @@
 
 namespace app\controllers;
 
-
-use yii\rest\ActiveController;
-use yii\helpers\ArrayHelper;
-//use yii\web\BadRequestHttpException;
-use yii\web\NotFoundHttpException;
+use yii\base\ActionFilter;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\HttpBasicAuth; 
 use yii\filters\AccessControl;
-use yii\base\ActionFilter;
-//use app\components\AccessRule;
+use yii\helpers\ArrayHelper;
+use yii\rest\ActiveController;
+use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class MainController extends ActiveController 
@@ -20,13 +18,13 @@ class MainController extends ActiveController
 
     public $reservedParams   = ['sort','q'];
     // full name of model for searching, '\app\models\UsersSearch'
-    public $searchModel     = null;
+    // public $searchModel     = null;
     // name of atrr for searching  = name model, 'UsersSearch'
-    public $searchAttr       = null;
+    //public $searchAttr       = null;
     // full name of users model '\app\models\Users'
-    public $authModel        = null;
+    // public $authModel        = null;
     // name model for AuthorRule
-    public $nameModel        = null;
+    //public $nameModel        = null;
     // filter for indexDataProvider or id or user_id, depending of models
     public $allowId          = null;
 
@@ -39,20 +37,96 @@ class MainController extends ActiveController
     
     }
 
-    public function indexDataProvider() 
+    // user authentication
+    public function behaviors()
     {
-        $filter = $this->getFilterParams();
-        //set key  as id or user_id (depending on model) => current user
-        $filter[$this->allowId] = \Yii::$app->user->identity->id;
-                 
-        $searchByAttr[$this->searchAttr] = $filter;
-            
-        $searchModel = new $this->searchModel();
-        
-            return $searchModel->search($searchByAttr);
-           
-    }
+        $behaviors = parent::behaviors();
 
+        $behaviors['authenticator'] = 
+           [
+           /*
+            'class' => CompositeAuth::className(),
+            'authMethods' => 
+            [
+                [
+                'class' => HttpBasicAuth::className(),
+                'auth' => function($username, $password)
+                        {  
+                          $authUser = $this->validateUser($username, $password);
+                                return $authUser;
+                        }
+                ],
+                */
+                'class' => HttpBearerAuth::className(),
+                //],
+            ];
+        $behaviors['access'] = [
+            'class' => AccessControl::className(),
+           // 'only' => ['create', 'update', 'delete','view','index', 'index-images'],
+            'rules' => [
+                [
+                    'actions' => ['delete'],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    {
+                        if(\Yii::$app->user->can('delete'.$this->model))
+                                return true;
+                    }
+                ],
+
+                [
+                    'actions' => ['update'],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    {   
+                        if(\Yii::$app->user->can('update'.$this->model))
+                               return true;
+                    }
+                ],
+                [
+                    'actions' => ['create'],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    {
+                        if(\Yii::$app->user->can('create'.$this->model))
+                            return true;
+                    }
+                ],
+                [
+                    'actions' => ['index'],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    {  // $this->allowId = 'user_id';
+                        if(\Yii::$app->user->can('index'.$this->model))
+                            return true;
+                    }
+                ],
+                [
+                    'actions' => ['view'],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    {
+                        if(\Yii::$app->user->can('view'.$this->model))
+                            return true;
+                    }
+                ],
+                [
+                    'actions' => ['index-'.strtolower($this->linkedModel)],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    { 
+                        if(\Yii::$app->user->can('index'.$this->linkedModel))
+                            return true;
+                    }
+                ],
+
+                ],
+            
+        ];
+    return $behaviors;
+}
+    
+    // helpers
     public function getFilterParams()
     {
         $params = \Yii::$app->request->queryParams;
@@ -77,58 +151,20 @@ class MainController extends ActiveController
         return $filter;
     }
 
-    // user authentication
-    public function behaviors()
+    public function indexDataProvider() 
     {
-            $behaviors = parent::behaviors();
-
-            $behaviors['authenticator'] = 
-            [
-                'class' => CompositeAuth::className(),
-                'authMethods' => 
-                [
-                    [
-                        'class' => HttpBasicAuth::className(),
-                        'auth' => function($username, $password)
-                            {  
-                                $authUser = $this->validateUser($username, $password);
-                                // uncomment for work
-                                // $this -> setToken($authUser);
-                                    return $authUser;
-                            }
-                    ],
-                
-                'class' => HttpBearerAuth::className(),
-                ],
-            ];
-
-            return $behaviors; 
+        $filter = $this->getFilterParams();
+        //set key  as id or user_id (depending on model) => current user
+        $filter[$this->allowId] = \Yii::$app->user->identity->id;
+                 
+        $searchByAttr[$this->searchAttr] = $filter;
+            
+        $searchModel = new $this->searchModel();
+        
+            return $searchModel->search($searchByAttr);
+           
     }
-
-    // new token after every action
-   /*
-    public function afterAction($action, $result)
-    {
-            $result = parent::afterAction($action, $result);
-            // uncomment for work
-            // $authUser = \Yii::$app->user->identity;
-            // $this->setToken($authUser);
-        return $result;
-    }
-    */
-
-    // helpers
-    // model for author rule rbac
-    public function findModelAuthorRule($id)
-    {
-        $nameModel = $this->nameModel;
-        if (($model = $nameModel::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('404 The requested page does not exist.', 404);
-        }
-    }
-    
+  /*  
     public function validateUser($username, $password)
     {
         $authUser = null;
@@ -154,5 +190,15 @@ class MainController extends ActiveController
         $authHeader = $authUser->access_token;
         $response = \Yii::$app->response;
         $response->getHeaders()->set('Autorization', 'Bearer '.$authHeader);
+    }
+*/
+    public function findModelAuthorRule($id)
+    {
+        $nameModel = $this->modelClass;
+        if (($model = $nameModel::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('404 The requested page does not exist.', 404);
+        }
     }
 }

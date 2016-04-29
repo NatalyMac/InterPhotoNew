@@ -19,7 +19,7 @@ class AllowRule extends Rule
      * @return boolean a value indicating whether the rule permits the role or permission it is associated with.
      */
     public function execute($user, $item, $params)
-    {
+    { 
         $user_id = null;
         $id = \Yii::$app->user->identity->id;
 
@@ -33,11 +33,13 @@ class AllowRule extends Rule
         }
            
         \Yii::$app->controller->allowId = 'user_id';    
-        
+   
         if (($user_id == $id) or ($user_id == null))
+            
             return true;
         
-        if ($user_id !== $id) 
-            return false;
+        if ($user_id !== $id)
+          return false;
+        
     }
 }

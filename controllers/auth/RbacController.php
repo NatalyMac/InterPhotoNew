@@ -24,6 +24,85 @@ class RbacController extends Controller
 
     // создаем разрешения
    
+public function actionCreate_users()
+{
+ $auth = Yii::$app->authManager;
+       
+        $indexUser = $auth->createPermission('indexUser');
+        $indexUser->description = 'Index an user';
+        $auth->add($indexUser);
+
+        // добавляем разрешение "viewAlbum"
+        $viewUser = $auth->createPermission('viewUser');
+        $viewUser->description = 'View user';
+        $auth->add($viewUser);
+        
+        // добавляем разрешение "createAlbum"
+        $createUser = $auth->createPermission('createUser');
+        $createUser->description = 'Create an user';
+        $auth->add($createUser);
+
+        // добавляем разрешение "updateAlbum"
+        $updateUser = $auth->createPermission('updateUser');
+        $updateUser->description = 'Update user';
+        $auth->add($updateUser);
+
+        // добавляем разрешение "deleteAlbum"
+        $deleteUser = $auth->createPermission('deleteUser');
+        $deleteUser->description = 'Delete user';
+        $auth->add($deleteUser);
+
+        $rule = new \app\controllers\auth\AuthorRule;
+        //$auth->add($rule);
+
+        // добавляем разрешение "updateOwnPost" и привязываем к нему правило.
+        
+        $viewOwnUser = $auth->createPermission('viewOwnUser');
+        $viewOwnUser->description = 'View own user';
+        $viewOwnUser->ruleName = $rule->name;
+        $auth->add($viewOwnUser);
+        
+        $indexOwnUser = $auth->createPermission('indexOwnUser');
+        $indexOwnUser->description = 'Index own user';
+        $indexOwnUser->ruleName = $rule->name;
+        $auth->add($indexOwnUser);
+
+        $updateOwnUser = $auth->createPermission('updateOwnUser');
+        $updateOwnUser->description = 'Update own user';
+        $updateOwnUser->ruleName = $rule->name;
+        $auth->add($updateOwnUser);
+        
+        $auth->addChild($updateOwnUser, $updateUser);
+        $auth->addChild($indexOwnUser, $indexUser);
+        $auth->addChild($viewOwnUser, $viewUser);
+
+
+          $photographer = $auth->createPermission('photographer');
+          $client = $auth->createPermission('client');
+          $admin = $auth->createPermission('admin'); 
+
+
+           $auth->addChild($photographer, $indexOwnUser);
+           $auth->addChild($photographer, $viewOwnUser);
+           $auth->addChild($photographer, $updateOwnUser);
+           $auth->addChild($photographer, $createUser);
+           
+           $auth->addChild($client, $indexOwnUser);
+           $auth->addChild($client, $viewOwnUser);
+           $auth->addChild($client, $updateOwnUser);
+           $auth->addChild($client, $createUser);
+   
+            $auth->addChild($admin, $indexUser);
+            $auth->addChild($admin, $viewUser);
+            $auth->addChild($admin, $updateUser);
+             $auth->addChild($admin, $createUser);
+              $auth->addChild($admin, $deleteUser);
+
+
+    
+}
+
+
 
 public function actionCreate_images()
 {
