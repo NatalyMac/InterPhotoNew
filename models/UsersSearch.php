@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Users;
-use yii\web\BadRequestHttpException;
+//use yii\web\BadRequestHttpException;
 
 class UsersSearch extends Users
 {
@@ -14,7 +14,7 @@ class UsersSearch extends Users
         {
             return [
                 [['id'], 'integer'],
-                [['access_token', 'role', 'name', 'username', 'password', 'phone', 'modified_at', 'created_at', 'auth_key', 'password_hash'], 'safe'],
+                [['access_token', 'role', 'name', 'email', 'password', 'phone', 'modified_at', 'created_at', 'auth_key', 'password_hash'], 'safe'],
               ];
         }
 
@@ -26,20 +26,15 @@ class UsersSearch extends Users
 
     public function search($params)
     {
-        $query = Users::find();
-
-        // add conditions that should always apply here
-        $dataProvider = new ActiveDataProvider(['query' => $query]);
-        
         $this->load($params);
+        if (!$this->validate()) 
+            {
+                $query->where('0=1');
+                return $dataProvider;
+            }
+        $query = static::find();
+        $dataProvider = new ActiveDataProvider(['query' => $query]);
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            $query->where('0=1');
-            return $dataProvider;
-        }
-        // grid filtering conditions
-        
         $query->andFilterWhere([
             'id' => $this->id,
             'modified_at' => $this->modified_at,
@@ -49,7 +44,7 @@ class UsersSearch extends Users
         $query
             ->andFilterWhere(['like', 'role', $this->role])
             ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'username', $this->username])
+            ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'phone', $this->phone]);
             
             return $dataProvider;

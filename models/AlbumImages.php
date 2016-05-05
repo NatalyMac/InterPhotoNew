@@ -27,7 +27,7 @@ class AlbumImages extends \yii\db\ActiveRecord
     public function fields() 
     {
     $fields = parent::fields();
-    // because of the json worning, unset for working
+    // because of the json worning, unset for testing
     unset($fields['image']);
 
     return $fields;

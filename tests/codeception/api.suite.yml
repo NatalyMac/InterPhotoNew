@@ -1,0 +1,13 @@
+class_name: ApiTester
+modules:
+    enabled:
+        - PhpBrowser
+        - REST
+        - ApiHelper
+        - Yii2
+        - Asserts
+    config:
+      PhpBrowser:
+          url: http://127.0.0.1/
+      REST:
+        url: http://127.0.0.1/interPhoto/web/index.php/

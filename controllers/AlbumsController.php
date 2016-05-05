@@ -17,18 +17,16 @@ use yii\data\ActiveDataProvider;
 class AlbumsController extends MainController
 {
     public $modelClass       = '\app\models\Albums';
+    public $modelName        = 'Albums';
+    public $searchModelClass = '\app\models\AlbumsSearch';
+    public $searchModelName  = 'AlbumsSearch';
     public $linkedModelClass = '\app\models\AlbumImages';
-    public $searchAttr       = 'AlbumsSearch';
-    public $searchModel      = '\app\models\AlbumsSearch';
-    public $authModel        = '\app\models\Users';
-    //public $nameModel   = '\app\models\Albums';
-    public $model            = 'Album';
-    public $linkedModel      = 'Images';
-
+    public $linkedModelName  = 'Images';
+    
 /**
  * @api {get} /albums Index albums
  * @apiName Index Albums
- * @apiGroup Album
+ * @apiGroup Albums
  *
  * @apiDescription Returns the users' albums according users permissions.
  * Administrator can get all albums.
@@ -71,10 +69,10 @@ class AlbumsController extends MainController
 
 /**
  * @api {get} /albums/id  View specific album
- * @apiName View Albums
- * @apiGroup Album
+ * @apiName View Album
+ * @apiGroup Albums
  *
- * @apiDescription Returns the inique id album according users permissions.
+ * @apiDescription Returns the unique id album according users permissions.
  * Administrator can view any album.
  * Photographer and client only their own (allowed) albums.
  * 
@@ -122,10 +120,10 @@ class AlbumsController extends MainController
 
 /**
  * @api {put} /albums/id  Update specific album
- * @apiName Update Albums
- * @apiGroup Album
+ * @apiName Update Album
+ * @apiGroup Albums
  *
- * @apiDescription Updates the inique id album according users permissions.
+ * @apiDescription Updates the unique id album according users permissions.
  * Administrator can update any album.
  * Photographer and client only their own (allowed) albums.
  * 
@@ -174,12 +172,12 @@ class AlbumsController extends MainController
     
 /**
  * @api {post} /albums  Create new album
- * @apiName Create Albums
- * @apiGroup Album
+ * @apiName Create Album
+ * @apiGroup Albums
  *
  * @apiDescription Creates a new album according users permissions.
  * Administrator, Photographer and Client  can create album
- * 
+ *
  * @apiParam {Number} ID Album ID
  * @apiParam {Json} name Album name like { "name": "Animals"}
  *
@@ -212,10 +210,10 @@ class AlbumsController extends MainController
 
 /**
  * @api {delete} /albums/id  Delete specific album
- * @apiName Delete Albums
- * @apiGroup Album
+ * @apiName Delete Album
+ * @apiGroup Albums
  *
- * @apiDescription Deletes the inique id album according users permissions.
+ * @apiDescription Deletes the unique id album according users permissions.
  * Only Administrator can delete any album.
  * Photographer and client are not allowed to action.
  * 
@@ -248,38 +246,252 @@ class AlbumsController extends MainController
  *        "type": "yii\\web\\ForbiddenHttpException"
  *       }
  */
+
     public function actionDelete()
     {
         return parent::actionDelete();
     }
 
-
     public function actions() 
     {   
         $actions = parent::actions();
+        
         $actions ['options-images'] = [
             'class' => 'yii\rest\OptionsAction',
             ];
+        
+/**
+ * @api {get} /albums/id/images/id  View specific image of the specific album
+ * @apiName View Image
+ * @apiGroup Images
+ *
+ * @apiDescription Returns the unique id image of the specific album  according users permissions.
+ * Administrator can view any image of any album.
+ * Photographer and client can view image only of  their own (allowed) albums.
+ * 
+ * @apiParam {number} ID Image ID image
+ *
+ * @apiSuccess {Json} Image the Image like {key:value,}
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *        {
+ *        to do
+ *         }
+ *
+ * @apiError Unauthorized <code>401</code> User needs to be autorized to action
+ *
+ * @apiErrorExample Error-Response:
+ *     401 Unauthorized
+ *     {
+ *        "name":"Unauthorized",
+ *        "message":"You are requesting with an invalid credential.",
+ *        "code":0,"status":401,"type":"yii\\web\\UnauthorizedHttpException"
+ *     }
+ * @apiError Forbidden <code>403</code> User's not allowed to action
+ *
+ * @apiErrorExample Error-Response:
+ *     403 Forbidden
+ *     {
+ *        "name": "Forbidden",
+ *        "message": "You are not allowed to perform this action.",
+ *        "code": 0,
+ *        "status": 403,
+ *        "type": "yii\\web\\ForbiddenHttpException"
+ *       }
+ */
+
         $actions['view-images'] = [
             'class' => 'yii\rest\ViewAction',
             'modelClass' => $this->modelClass,
             'findModel' => [$this, 'findModelImages']
             ];       
+       
+        
+/**
+ * @api {put} /albums/id/images/id  Update specific image of the specific album
+ * @apiName Update Image
+ * @apiGroup Images
+ *
+ * @apiDescription Update the unique id image of the specific album  according users permissions.
+ * Administrator can update any image of any album.
+ * Photographer and client can update image only of  their own (allowed) albums.
+ * 
+ * @apiParam {number} ID Image 
+ * @apiParam {string} Image to do
+ *
+ * @apiSuccess {Json} Image the Image like {key:value,}
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *        {
+ *        to do
+ *         }
+ *
+ * @apiError Unauthorized <code>401</code> User needs to be autorized to action
+ *
+ * @apiErrorExample Error-Response:
+ *     401 Unauthorized
+ *     {
+ *        "name":"Unauthorized",
+ *        "message":"You are requesting with an invalid credential.",
+ *        "code":0,"status":401,"type":"yii\\web\\UnauthorizedHttpException"
+ *     }
+ * @apiError Forbidden <code>403</code> User's not allowed to action
+ *
+ * @apiErrorExample Error-Response:
+ *     403 Forbidden
+ *     {
+ *        "name": "Forbidden",
+ *        "message": "You are not allowed to perform this action.",
+ *        "code": 0,
+ *        "status": 403,
+ *        "type": "yii\\web\\ForbiddenHttpException"
+ *       }
+ */
         $actions['update-images'] = [
             'class' => 'yii\rest\UpdateAction',
             'modelClass' => $this->modelClass,
             'findModel' => [$this, 'findModelImages']
             ];       
+        
+        
+/**
+ * @api {post} /albums/id/images  Create  image of the specific album
+ * @apiName Create Image
+ * @apiGroup Images
+ *
+ * @apiDescription Creates image of the specific album  according users permissions.
+ * Administrator can create any image of any album.
+ * Photographer can create  image in their own albums.
+ * 
+ * @apiParam {string} to do
+ * @apiParam {string} to do
+ *
+ * @apiSuccess {Json} Image the Image like {key:value,}
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *        {
+ *        to do
+ *         }
+ *
+ * @apiError Unauthorized <code>401</code> User needs to be autorized to action
+ *
+ * @apiErrorExample Error-Response:
+ *     401 Unauthorized
+ *     {
+ *        "name":"Unauthorized",
+ *        "message":"You are requesting with an invalid credential.",
+ *        "code":0,"status":401,"type":"yii\\web\\UnauthorizedHttpException"
+ *     }
+ * @apiError Forbidden <code>403</code> User's not allowed to action
+ *
+ * @apiErrorExample Error-Response:
+ *     403 Forbidden
+ *     {
+ *        "name": "Forbidden",
+ *        "message": "You are not allowed to perform this action.",
+ *        "code": 0,
+ *        "status": 403,
+ *        "type": "yii\\web\\ForbiddenHttpException"
+ *       }
+ */
         $actions['create-images'] = [
             'class' => 'yii\rest\CreateAction',
             'modelClass' => $this->linkedModelClass,
             'findModel' => [$this, 'findModelImages']
             ];       
+        
+        
+/**
+ * @api {delete} /albums/id/images/id  Delete specific image of the specific album
+ * @apiName Delete Image
+ * @apiGroup Images
+ *
+ * @apiDescription Returns the unique id image of the specific album  according users permissions.
+ * Administrator can view any image of any album.
+ * Photographer and client can view image only of  their own (allowed) albums.
+ * 
+ * @apiParam {string} ID/images/ID Album ID/images/ID image
+ *
+ * @apiSuccess {Json} Image the Image like {key:value,}
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *        {
+ *        to do
+ *         }
+ *
+ * @apiError Unauthorized <code>401</code> User needs to be autorized to action
+ *
+ * @apiErrorExample Error-Response:
+ *     401 Unauthorized
+ *     {
+ *        "name":"Unauthorized",
+ *        "message":"You are requesting with an invalid credential.",
+ *        "code":0,"status":401,"type":"yii\\web\\UnauthorizedHttpException"
+ *     }
+ * @apiError Forbidden <code>403</code> User's not allowed to action
+ *
+ * @apiErrorExample Error-Response:
+ *     403 Forbidden
+ *     {
+ *        "name": "Forbidden",
+ *        "message": "You are not allowed to perform this action.",
+ *        "code": 0,
+ *        "status": 403,
+ *        "type": "yii\\web\\ForbiddenHttpException"
+ *       }
+ */
         $actions['delete-images'] = [
              'class' => 'yii\rest\DeleteAction',
              'modelClass' => $this->linkedModelClass,
              'findModel' => [$this, 'findModelImages']
             ];       
+        
+        
+/**
+ * @api {get} /albums/id/images  Index  image of the specific album
+ * @apiName Index Image
+ * @apiGroup Images
+ *
+ * @apiDescription Returns the list if images of the specific album  according users permissions.
+ * Administrator can index any image of any album.
+ * Photographer and client can index image only of  their own (allowed) albums.
+ * 
+ * @apiParam No
+ *
+ * @apiSuccess {Json} List of images the Image like {key:value,}
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *        {
+ *        to do
+ *         }
+ *
+ * @apiError Unauthorized <code>401</code> User needs to be autorized to action
+ *
+ * @apiErrorExample Error-Response:
+ *     401 Unauthorized
+ *     {
+ *        "name":"Unauthorized",
+ *        "message":"You are requesting with an invalid credential.",
+ *        "code":0,"status":401,"type":"yii\\web\\UnauthorizedHttpException"
+ *     }
+ * @apiError Forbidden <code>403</code> User's not allowed to action
+ *
+ * @apiErrorExample Error-Response:
+ *     403 Forbidden
+ *     {
+ *        "name": "Forbidden",
+ *        "message": "You are not allowed to perform this action.",
+ *        "code": 0,
+ *        "status": 403,
+ *        "type": "yii\\web\\ForbiddenHttpException"
+ *       }
+ */
+
         $actions['index-images'] = [
             'class' => 'yii\rest\IndexAction',
             'modelClass' => $this->modelClass,
@@ -292,6 +504,8 @@ class AlbumsController extends MainController
     {
         $params = \Yii::$app->request->queryParams['id'];
         $modelClass = $this->modelClass;
+        if (!($modelClass::findOne($params)))
+            throw new NotFoundHttpException('Object not found',404);
             return  $modelClass::findOne($params)->albumImages;
     }
 

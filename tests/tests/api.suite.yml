@@ -1,0 +1,8 @@
+class_name: ApiGuyTester
+modules:
+    enabled: [PhpBrowser, REST, ApiGuyHelper]
+    config:
+        PhpBrowser:
+            url: http://localhost/
+        REST:
+            url: http://127.0.0.1/interPhoto/web/index.php/

@@ -2,6 +2,7 @@
 namespace app\controllers\auth;
 
 use yii\rbac\Rule;
+use yii\web\NotFoundHttpException;
 
 //check user_id and 'id' from request  
 class AuthorRule extends Rule
@@ -16,17 +17,22 @@ class AuthorRule extends Rule
      */
     public function execute($user, $item, $params)
     {
-        if (isset($params['model'])) $model = $params['model'];
-        if (\Yii::$app->request->queryParams) 
-        {
-          $id = \Yii::$app->request->queryParams['id'];
-          $model = \Yii::$app->controller->findModelAuthorRule($id);
-          return $model->user_id === \Yii::$app->user->identity->id;
-      } 
-      else {
-         \Yii::$app->controller->allowId = 'id';  
-        return true;
-      }
 
+        if (isset($params['model'])) $model = $params['model'];
+        
+        $model = new \Yii::$app->controller->modelClass;
+        
+        if (!\Yii::$app->request->getQueryParam('id')) 
+            {
+              \Yii::$app->controller->allowId = 'user_id';
+              return true;
+            } 
+
+        $id = \Yii::$app->request->getQueryParam('id');
+        if (!$m = $model->findOne($id)) 
+            throw new NotFoundHttpException('Object not found', 404);
+        \Yii::$app->controller->allowId = 'user_id';
+            return $m->user_id == \Yii::$app->user->identity->id;
     }
+    
 }

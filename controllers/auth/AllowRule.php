@@ -10,7 +10,6 @@ use yii\rbac\Rule;
 class AllowRule extends Rule
 {
     public $name = 'isAllow';
-    public $allowId = null;
 
     /**
      * @param string|integer $user the user ID.
@@ -19,27 +18,28 @@ class AllowRule extends Rule
      * @return boolean a value indicating whether the rule permits the role or permission it is associated with.
      */
     public function execute($user, $item, $params)
-    { 
-        $user_id = null;
-        $id = \Yii::$app->user->identity->id;
+    {
 
-        if (isset(\Yii::$app->request->queryParams['user_id'])) 
-            $user_id = \Yii::$app->request->queryParams['user_id'];
+        if (isset($params['model'])) $model = $params['model'];
+        $model = \Yii::$app->controller->modelClass;  
 
-        if (isset(\Yii::$app->request->queryParams['id'])) { 
-            $id_item = \Yii::$app->request->queryParams['id'];
-            $model = \Yii::$app->controller->findModelAuthorRule($id_item);
-            $user_id = $model->user_id;
-        }
-           
-        \Yii::$app->controller->allowId = 'user_id';    
-   
-        if (($user_id == $id) or ($user_id == null))
+        $userId =  \Yii::$app->user->identity->id;  
+
+        if (!\Yii::$app->request->getQueryParam('id')) 
+            {
+              
+                \Yii::$app->controller->allowId = 'albums';
+
+                    return true;
+            } 
+
+        $album = null;
+        $model = \Yii::$app->controller->modelClass;
+        $id = \Yii::$app->request->getQueryParam('id');
+        $userId =  \Yii::$app->user->identity->id;
+        
+        if (!($album = $model::getClientAlbum($id, $userId))) return false;
             
-            return true;
-        
-        if ($user_id !== $id)
-          return false;
-        
+            return ($album);
     }
 }

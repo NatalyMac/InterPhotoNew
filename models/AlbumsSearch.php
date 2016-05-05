@@ -10,6 +10,7 @@ use app\models\Albums;
 class AlbumsSearch extends Albums
 {
 
+    
     public function rules()
     {
         return [
@@ -36,21 +37,22 @@ class AlbumsSearch extends Albums
             $cache->set($key, $query);
         }
         
-        // add conditions that should always apply here
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $dataProvider = new ActiveDataProvider(['query' => $query,]);
 
         $this->load($params);
 
-        if (!$this->validate()) {
+        if (!$this->validate()) 
+        {
             // uncomment the following line if you do not want to return any records when validation fails
-            $query->where('0=1');
+            $query->where('0=1'); 
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        $id = \Yii::$app->user->identity->id;
+        if (array_key_exists('albums', $params['AlbumsSearch']))
+            $albums = $this -> getClientAlbums($id);
+
         $query->andFilterWhere([
             'id' => $this->id,
             'user_id' => $this->user_id,
@@ -60,8 +62,11 @@ class AlbumsSearch extends Albums
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
-
-        return $dataProvider;
+      
+        if (isset($albums))
+            $query->andFilterWhere(['in', 'id', $albums]);
+            
+            return $dataProvider;
     }
 }
 

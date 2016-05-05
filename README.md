@@ -1,82 +1,102 @@
-YКонтроллеры
+Yii 2 Basic Project Template
+============================
 
-/controllers/AlbumsController.php /controllers/UsersController.php
+Yii 2 Basic Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
+rapidly creating small projects.
 
-Модели
+The template contains the basic features including user login/logout and a contact page.
+It includes all commonly used configurations that would allow you to focus on adding new
+features to your application.
 
-/models/Albums.php /models/Users.php
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2-app-basic/v/stable.png)](https://packagist.org/packages/yiisoft/yii2-app-basic)
+[![Total Downloads](https://poser.pugx.org/yiisoft/yii2-app-basic/downloads.png)](https://packagist.org/packages/yiisoft/yii2-app-basic)
+[![Build Status](https://travis-ci.org/yiisoft/yii2-app-basic.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-app-basic)
 
-Настройка URL
+DIRECTORY STRUCTURE
+-------------------
 
-/config/web.php
+      assets/             contains assets definition
+      commands/           contains console commands (controllers)
+      config/             contains application configurations
+      controllers/        contains Web controller classes
+      mail/               contains view files for e-mails
+      models/             contains model classes
+      runtime/            contains files generated during runtime
+      tests/              contains various tests for the basic application
+      vendor/             contains dependent 3rd-party packages
+      views/              contains view files for the Web application
+      web/                contains the entry script and Web resources
 
-Что выполняет
 
-GET http://localhost//web/index.php/albums GET http://localhost//web/index.php/users
 
-получение постранично списка всех пользователей
+REQUIREMENTS
+------------
 
-если
+The minimum requirement by this project template that your Web server supports PHP 5.4.0.
 
-GET http://localhost//web/index.php/users?name='имя'&role='роль'
 
-вывод будет отфильтрован по указанным значения полей модели работает для Users, Albums
+INSTALLATION
+------------
 
-HEAD http://localhost//web/index.php/albums HEAD http://localhost//web/index.php/users
+### Install from an Archive File
 
-получение метаданных листинга пользователей
+Extract the archive file downloaded from [yiiframework.com](http://www.yiiframework.com/download/) to
+a directory named `basic` that is directly under the Web root.
 
-POST http://localhost//web/index.php/albums POST http://localhost//web/index.php/users
+Set cookie validation key in `config/web.php` file to some random secret string:
 
-создание нового пользователя, альбома в теле пост данные для таблицы в формате имяполя:значение, имяполя&значение
+```php
+'request' => [
+    // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+    'cookieValidationKey' => '<secret random string goes here>',
+],
+```
 
-GET http://localhost//web/index.php/albums/id_альбома GET http://localhost//web/index.php/users/id_пользователя
-
-получение данных указанного в id пользователя, альбома
-
-HEAD http://localhost//web/index.php/albums/id_альбома HEAD http://localhost//web/index.php/users/id_пользователя
-
-получение метаданных указанного в id пользователя, альбома
-
-PUT http://localhost//web/index.php/albums/id_альбома PUT http://localhost//web/index.php/users/id_пользователя
-
-изменение данных пользователя, альбома указанного в id
-
-DELETE http://localhost//web/index.php/albums/id_альбома DELETE http://localhost//web/index.php/users/id_пользователя
-
-удаление данных пользователя, альбома указанного в id
-
-OPTIONS http://localhost//web/index.php/albums OPTIONS http://localhost//web/index.php/users
-
-получить методы, по которым можно обратиться к users, albums
-
-OPTIONS http://localhost//web/index.php/albums/id_альбома OPTIONS http://localhost//web/index.php/users/id_пользователя
-
-получить методы, по которым можно обратиться к указанной в id записи users, albums
-
-Статусы ответа:
-
-200 - успешное выполнение GET, PUT, HEAD, OPTIONS
-
-201 - успешное выполнение POST
-
-204 - успешное выполнение DELETE
-
-404 - объект не найден
-
-401 - требуется авторизация
-
-403 - доступ запрещен
-
-405 - метод не разрешен
-
-Уже умеем:
-проверять разрешения на действия по ролям через ACF фильтры и RBAC,
-а также настроено правило is Owner для обеих версий контроля авторизации, которое проверяет - является ли пользователем автором записи
-
-Также убрали дублирующий код контроллеров в MainController
-
-еще не все
-продолжение следует
+You can then access the application through the following URL:
 
 ~~~
+http://localhost/basic/web/
+~~~
+
+
+### Install via Composer
+
+If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
+at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
+
+You can then install this project template using the following command:
+
+~~~
+php composer.phar global require "fxp/composer-asset-plugin:~1.1.1"
+php composer.phar create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic basic
+~~~
+
+Now you should be able to access the application through the following URL, assuming `basic` is the directory
+directly under the Web root.
+
+~~~
+http://localhost/basic/web/
+~~~
+
+
+CONFIGURATION
+-------------
+
+### Database
+
+Edit the file `config/db.php` with real data, for example:
+
+```php
+return [
+    'class' => 'yii\db\Connection',
+    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
+    'username' => 'root',
+    'password' => '1234',
+    'charset' => 'utf8',
+];
+```
+
+**NOTES:**
+- Yii won't create the database for you, this has to be done manually before you can access it.
+- Check and edit the other files in the `config/` directory to customize your application as required.
+- Refer to the README in the `tests` directory for information specific to basic application tests.

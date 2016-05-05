@@ -21,17 +21,16 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['role', 'name', 'username', 'password'], 'required'],
+            [['role', 'name', 'email', 'password'], 'required'],
             [['role'], 'string'],
             [['modified_at', 'created_at'], 'safe'],
-            [['access_token'], 'string', 'max' => 100],
-            [['name', 'username', 'password'], 'string', 'max' => 50],
+           // [['access_token'], 'string', 'max' => 100],
+            [['name', 'email', 'password'], 'string', 'max' => 50],
+            [['email'], 'email'],
             [['phone'], 'string', 'max' => 15],
-            [['auth_key'], 'string', 'max' => 32],
-            [['password_hash'], 'string', 'max' => 255],
-            [['username'], 'unique'],
-            [['username'], 'unique'],
-            [['username'], 'unique'],
+            //[['auth_key'], 'string', 'max' => 32],
+            //[['password_hash'], 'string', 'max' => 255],
+            [['email'], 'unique'],
         ];
     }
 
@@ -39,7 +38,7 @@ public function fields()
 {
     $fields = parent::fields();
     // unset unsafely fields
-    unset($fields['auth_key'], $fields['password_hash'], $fields['access_token']);
+    unset($fields['auth_key'], $fields['password_hash'], $fields['access_token'], $fields['password']);
         return $fields;
 }
 
@@ -55,7 +54,7 @@ public function extraFields()
             'access_token' => 'Access Token',
             'role' => 'Role',
             'name' => 'Name',
-            'username' => 'Username',
+            'email' => 'Email',
             'password' => 'Password',
             'phone' => 'Phone',
             'modified_at' => 'Modified At',
@@ -90,9 +89,9 @@ public function extraFields()
     }
 
     
-    public static function findByUsername($username)
+    public static function findByEmail($email)
     {
-        return static::findOne(['username' => $username]);
+        return static::findOne(['email' => $email]);
     }
 
     // helpers
@@ -114,13 +113,14 @@ public function extraFields()
     public function generateAccessToken()
     {
         $this->access_token = Yii::$app->security->generateRandomString();
-        $this->update();
+         if (!$this->update()) return false;
+         return true;
     }
  
-    public static function validateUser($username, $password)
+    public static function validateUser($email, $password)
     {   
         $authUser = null;
-        $authUser = static::findByUsername($username);
+        $authUser = static::findByEmail($email);
         if ($authUser!=null and $password!=null) 
         {
             if ($authUser->validatePassword($password)) 
@@ -131,13 +131,21 @@ public function extraFields()
         } 
     }
 
+    public function resetPassword($password)
+    {
+        $this->password = $password;
+        if (!$this->update()) return false;
+            return true;
+    }
+
+
     public static function resetToken($token)
     {
         $authUser = static::findIdentityByAccessToken($token);
         if (!$authUser) return false;
             $authUser->access_token = '';
-            $authUser->update();
-        return true;
+        if (!$authUser->update()) return false;
+            return true;
    }
 
 

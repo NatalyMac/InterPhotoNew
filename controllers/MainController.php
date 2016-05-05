@@ -13,21 +13,22 @@ use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
+
 class MainController extends ActiveController 
 {
-
+    public $modelClass          = null;
+    public $modelName           = null;
+    public $searchModelClass    = null;
+    public $searchModelName     = null;
+    public $linkedModelName     = null ;
+    // $allowId is indicator to restrict index data by current user or alloewd items if it is requared by autorization rules 
+    // available values 'id', 'user_id', 'albums'
+    // when $allowId is 'albums' model Albums checks albums_id and user_id in the AlbumImages model 
+    public $allowId             = null;
     public $reservedParams   = ['sort','q'];
-    // full name of model for searching, '\app\models\UsersSearch'
-    // public $searchModel     = null;
-    // name of atrr for searching  = name model, 'UsersSearch'
-    //public $searchAttr       = null;
-    // full name of users model '\app\models\Users'
-    // public $authModel        = null;
-    // name model for AuthorRule
-    //public $nameModel        = null;
-    // filter for indexDataProvider or id or user_id, depending of models
-    public $allowId          = null;
 
+    public $serializer = 'app\controllers\MySerializer';
+    
     public function actions() 
     {   
         $actions = parent::actions();
@@ -37,39 +38,27 @@ class MainController extends ActiveController
     
     }
 
-    // user authentication
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-
+        
+        // user authentication
         $behaviors['authenticator'] = 
-           [
-           /*
-            'class' => CompositeAuth::className(),
-            'authMethods' => 
             [
-                [
-                'class' => HttpBasicAuth::className(),
-                'auth' => function($username, $password)
-                        {  
-                          $authUser = $this->validateUser($username, $password);
-                                return $authUser;
-                        }
-                ],
-                */
                 'class' => HttpBearerAuth::className(),
-                //],
             ];
+        // user autherization
         $behaviors['access'] = [
             'class' => AccessControl::className(),
-           // 'only' => ['create', 'update', 'delete','view','index', 'index-images'],
+            'except' => ['options'],
+            // 'only' => ['create', 'update', 'delete','view','index', 'index-images'],
             'rules' => [
                 [
                     'actions' => ['delete'],
                     'allow' => true,
                     'matchCallback' => function ($rule, $action)
                     {
-                        if(\Yii::$app->user->can('delete'.$this->model))
+                        if(\Yii::$app->user->can('delete'.$this->modelName))
                                 return true;
                     }
                 ],
@@ -79,7 +68,7 @@ class MainController extends ActiveController
                     'allow' => true,
                     'matchCallback' => function ($rule, $action)
                     {   
-                        if(\Yii::$app->user->can('update'.$this->model))
+                        if(\Yii::$app->user->can('update'.$this->modelName))
                                return true;
                     }
                 ],
@@ -88,7 +77,7 @@ class MainController extends ActiveController
                     'allow' => true,
                     'matchCallback' => function ($rule, $action)
                     {
-                        if(\Yii::$app->user->can('create'.$this->model))
+                        if(\Yii::$app->user->can('create'.$this->modelName))
                             return true;
                     }
                 ],
@@ -97,7 +86,7 @@ class MainController extends ActiveController
                     'allow' => true,
                     'matchCallback' => function ($rule, $action)
                     {  // $this->allowId = 'user_id';
-                        if(\Yii::$app->user->can('index'.$this->model))
+                        if(\Yii::$app->user->can('index'.$this->modelName))
                             return true;
                     }
                 ],
@@ -106,99 +95,94 @@ class MainController extends ActiveController
                     'allow' => true,
                     'matchCallback' => function ($rule, $action)
                     {
-                        if(\Yii::$app->user->can('view'.$this->model))
-                            return true;
-                    }
-                ],
-                [
-                    'actions' => ['index-'.strtolower($this->linkedModel)],
-                    'allow' => true,
-                    'matchCallback' => function ($rule, $action)
-                    { 
-                        if(\Yii::$app->user->can('index'.$this->linkedModel))
+                        if(\Yii::$app->user->can('view'.$this->modelName))
                             return true;
                     }
                 ],
 
-                ],
-            
-        ];
-    return $behaviors;
-}
-    
-    // helpers
-    public function getFilterParams()
-    {
-        $params = \Yii::$app->request->queryParams;
-        $model = new $this->modelClass;
-        $modelAttr = $model->attributes;
-        
-        // filter key => value array from GET request
-        $filter = [];
-            if (!empty($params)) 
-            {
-                foreach ($params as $key => $value) 
-                {
-                    if(!is_scalar($key) or !is_scalar($value)) {
-                        throw new BadRequestHttpException('400 Bad Request',400);
+                [
+                    'actions' => ['index-'.strtolower($this->linkedModelName)],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    { 
+                        if(\Yii::$app->user->can('index'.$this->linkedModelName))
+                            return true;
                     }
-                    // not reserved words and model attributes
-                    if (!in_array(strtolower($key), $this->reservedParams) 
-                        && ArrayHelper::keyExists($key, $modelAttr, false)) 
-                        $filter[$key] = $value;
-                }
-            } 
-        return $filter;
+                ],
+                /*
+                [
+                    'actions' => ['view-'.strtolower($this->linkedModelName)],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    { 
+                        if(\Yii::$app->user->can('view'.$this->linkedModelName))
+                            return true;
+                    }
+                ],
+                [
+                    'actions' => ['create-'.strtolower($this->linkedModelName)],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    { 
+                        if(\Yii::$app->user->can('create'.$this->linkedModelName))
+                            return true;
+                    }
+                ],
+                [
+                    'actions' => ['update-'.strtolower($this->linkedModelName)],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    { 
+                        if(\Yii::$app->user->can('update'.$this->linkedModelName))
+                            return true;
+                    }
+                ],
+                [
+                    'actions' => ['delete-'.strtolower($this->linkedModelName)],
+                    'allow' => true,
+                    'matchCallback' => function ($rule, $action)
+                    { 
+                        if(\Yii::$app->user->can('delete'.$this->linkedModelNmae))
+                            return true;
+                    }
+                ],
+                */
+            ],//rules
+        ];
+             return $behaviors;
     }
+    
 
     public function indexDataProvider() 
     {
         $filter = $this->getFilterParams();
         //set key  as id or user_id (depending on model) => current user
         $filter[$this->allowId] = \Yii::$app->user->identity->id;
-                 
-        $searchByAttr[$this->searchAttr] = $filter;
-            
-        $searchModel = new $this->searchModel();
-        
+        $searchByAttr[$this->searchModelName] = $filter;
+        $searchModel = new $this->searchModelClass();
             return $searchModel->search($searchByAttr);
            
     }
-  /*  
-    public function validateUser($username, $password)
-    {
-        $authUser = null;
-        $authModel=$this->authModel;
-        $user = $authModel::findByUsername($username);
-                       
-        if($user!=null and $password!=null) {
-            if($user->validatePassword($password)) {
-               $authUser = $user;
-               $this->setToken($authUser);
-            }
-            return $authUser;
-        }   
-    }
     
-    // set and send token for validated user
-    public function setToken($authUser)
+    public function getFilterParams()
     {
-        if (!$authUser) throw new  BadRequestHttpException('Bad Request',400);
-         
-        $authUser->generateAccessToken();
+        $params = \Yii::$app->request->getQueryParams();
+        $model = new $this->modelClass;
+        $modelAttr = $model->attributes;
         
-        $authHeader = $authUser->access_token;
-        $response = \Yii::$app->response;
-        $response->getHeaders()->set('Autorization', 'Bearer '.$authHeader);
-    }
-*/
-    public function findModelAuthorRule($id)
-    {
-        $nameModel = $this->modelClass;
-        if (($model = $nameModel::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('404 The requested page does not exist.', 404);
-        }
+        // array of filters as key => value array from GET request
+        $filter = [];
+            if (!empty($params)) 
+            {
+                foreach ($params as $key => $value) 
+                {
+                    if(!is_scalar($key) or !is_scalar($value)) 
+                        throw new BadRequestHttpException('400 Bad Request. Parameters are not scalar',400);
+                    // not reserved words and is model attributes
+                    if (!in_array(strtolower($key), $this->reservedParams) && ArrayHelper::keyExists($key, $modelAttr, false)) 
+                        $filter[$key] = $value;
+                }
+            } 
+        return $filter;
     }
 }

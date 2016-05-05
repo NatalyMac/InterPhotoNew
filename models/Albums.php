@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\behaviors\BlameableBehavior;
+use \app\models\AlbumClients;
 
 class Albums extends \yii\db\ActiveRecord
 {
@@ -72,7 +73,44 @@ class Albums extends \yii\db\ActiveRecord
                 
             ];
         return $behaviors;
-}
+    }
+
+    public static function getClientAlbums($idUser)
+    {
+        $albums = null;
+        $i = 0;
+        $clientAlbums = array ();
+        $albums = AlbumClients::find()
+              -> select ('album_id')
+              -> where ([
+                'user_id' => $idUser,
+                ])
+              ->asArray()
+              ->all();
+        
+        foreach ($albums as $album)
+        {
+            $clientAlbums[$i] = $album['album_id'];
+            $i++;
+        }
+            return $clientAlbums;
+    }
+
+    public static function getClientAlbum($id, $idUser)
+    {
+        $album = null;
+        $album = AlbumClients::find()
+              -> where ([
+                'user_id' => $idUser,
+                'album_id' =>$id,
+                ])
+              ->all();
+            return $album;
+    }
+
+
+
+
 
 
 

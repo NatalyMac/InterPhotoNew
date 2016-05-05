@@ -24,6 +24,14 @@ class RbacController extends Controller
 
     // создаем разрешения
    
+public function actionRule()
+{
+ $auth = Yii::$app->authManager;
+ $rule = new \app\controllers\auth\OwnerRule;
+ $auth->add($rule);
+}
+
+
 public function actionCreate_users()
 {
  $auth = Yii::$app->authManager;
