@@ -12,6 +12,9 @@ use yii\filters\VerbFilter;
 
 class Users extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    const SCENARIO_LOGIN = 'login';
+    const SCENARIO_REGISTER = 'register';
+    const SCENARIO_ASKRESET = 'askreset';
 
     public static function tableName()
     {
@@ -22,23 +25,33 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['role', 'name', 'email', 'password'], 'required'],
+            [['email'], 'unique', 'on' => 'register'],
             [['role'], 'string'],
             [['modified_at', 'created_at'], 'safe'],
-           // [['access_token'], 'string', 'max' => 100],
-            [['name', 'email', 'password'], 'string', 'max' => 50],
+            //[['access_token'], 'string', 'max' => 100],
+            [['password'], 'string', 'max' => 255], 
+            [['name', 'email'], 'string', 'max' => 50],
             [['email'], 'email'],
             [['phone'], 'string', 'max' => 15],
-            //[['auth_key'], 'string', 'max' => 32],
-            //[['password_hash'], 'string', 'max' => 255],
-            [['email'], 'unique'],
         ];
     }
+
+public function scenarios()
+    {
+        
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_LOGIN] =    ['email', 'password'];
+        $scenarios[self::SCENARIO_REGISTER] = ['email', 'password', 'name', 'role', ];
+        $scenarios[self::SCENARIO_ASKRESET] = ['email'];
+        return $scenarios;
+    }
+
 
 public function fields()
 {
     $fields = parent::fields();
     // unset unsafely fields
-    unset($fields['auth_key'], $fields['password_hash'], $fields['access_token'], $fields['password']);
+    unset($fields['access_token'], $fields['password']);
         return $fields;
 }
 
@@ -59,8 +72,6 @@ public function extraFields()
             'phone' => 'Phone',
             'modified_at' => 'Modified At',
             'created_at' => 'Created At',
-            'auth_key' => 'Auth Key',
-            'password_hash' => 'Password Hash',
         ];
     }
 
@@ -90,60 +101,67 @@ public function extraFields()
 
     
     public static function findByEmail($email)
+    //!!!!!!
     {
         return static::findOne(['email' => $email]);
     }
 
-    // helpers
+    // helpers !!!!!!
     public function setPassword($password)
     {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
-    }
-
-    public function generateAuthKey()
-    {
-        $this->auth_key = Yii::$app->security->generateRandomString();
+      return $this->password = Yii::$app->getSecurity()->generatePasswordHash($password);
+    
+        //return $this->password = $password;
     }
 
     public function validatePassword($password)
     {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password);
+//hash
     }
 
     public function generateAccessToken()
     {
         $this->access_token = Yii::$app->security->generateRandomString();
-         if (!$this->update()) return false;
-         return true;
+        
+        if (!$this->update()) return false;
+         
+             return true;
     }
  
-    public static function validateUser($email, $password)
+    public function validateUser($email, $password)
     {   
-        $authUser = null;
         $authUser = static::findByEmail($email);
         if ($authUser!=null and $password!=null) 
         {
-            if ($authUser->validatePassword($password)) 
-            { 
-                $authUser->generateAccessToken();
+                if (!$authUser->validatePassword($password))  
+                    return false;
+        
+                    
+            $authUser->generateAccessToken();
                 return $authUser;
-            }
-        } 
+        }          
     }
 
     public function resetPassword($password)
-    {
+    {   
         $this->password = $password;
-        if (!$this->update()) return false;
-            return true;
+        
+        if (!$this->save())
+            return false;
+        
+        return true;
     }
 
 
-    public static function resetToken($token)
+    public static function deleteToken($token)
     {
         $authUser = static::findIdentityByAccessToken($token);
+        
         if (!$authUser) return false;
-            $authUser->access_token = '';
+        
+        $authUser->access_token = '';
+        
         if (!$authUser->update()) return false;
             return true;
    }
@@ -179,35 +197,33 @@ public function extraFields()
 
     public function beforeSave($insert)
     {
-        if (parent::beforeSave($insert)) {
+        if (parent::beforeSave($insert)) 
+        {
             if ($this->isNewRecord) 
             {
-                $this->generateAuthKey($this->auth_key);
                 $this->setPassword($this->password);
             }
+            
             if ($this->isAttributeChanged('password'))
             {
                 $this->setPassword($this->password);   
-                $this->generateAuthKey($this->auth_key);
             }
                 return true;
 
         } else {
-            return false;
+           return false;
         }   
     }
     
-    public function afterSave($insert, $attrs)
-    {
-        if ($insert) 
-        {
-            $this->roleAssignment();    
-            return true;
-        } else { 
-            return false;
-        }
+    public function afterSave($insert, $changedAttributes)
+    {   
+        parent::afterSave($insert,$changedAttributes);
+            if ($insert) 
+                {
+                    $this->roleAssignment();    
+                    return true;
+               }
     }
-
     public function roleAssignment()
     {
         $auth = Yii::$app->authManager;

@@ -12,5 +12,6 @@ $_SERVER['SCRIPT_FILENAME'] = YII_TEST_ENTRY_FILE;
 $_SERVER['SCRIPT_NAME'] = YII_TEST_ENTRY_URL;
 $_SERVER['SERVER_NAME'] = parse_url(\Codeception\Configuration::config()['config']['test_entry_url'], PHP_URL_HOST);
 $_SERVER['SERVER_PORT'] =  parse_url(\Codeception\Configuration::config()['config']['test_entry_url'], PHP_URL_PORT) ?: '80';
+\Codeception\Module\Dbh::$dbh = $dbh;
 
 Yii::setAlias('@tests', dirname(__DIR__));

@@ -11,35 +11,37 @@ use app\models\ResetPass;
 use yii\swiftmailer\Mailer;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
+use app\models\Users;
 
 class DoResetAction extends \yii\rest\Action
 {
     public $authModel = 'app\models\Users';
-    
+    public $loginScenario =  Users::SCENARIO_LOGIN;
+    public $doScenario =  ResetPass::SCENARIO_DO;
     public function run()
     {
 
-        if (!\Yii::$app->request->getbodyParams())
-    	throw new BadRequestHttpException('Email or(and) reset code or(and) password is (are) empty', 400);
-        
-        if ((!($email = \Yii::$app->request->getbodyParam('email'))
-            or (!($resetCode = \Yii::$app->request->getbodyParam('reset-code'))))
-            or (!($password = \Yii::$app->request->getbodyParam('password'))))
+        $params = \Yii::$app->request->getbodyParams();
+
+        $authModel = new $this->authModel();
+        $authModel->scenario = $this->loginScenario;
+        $authModel->attributes = $params;
+
+        $resetPass = new $this->modelClass();
+        $resetPass->scenario =  $this->doScenario;
+        $resetPass->attributes = $params;
+
+        if ((!$authModel->validate()) or (!$resetPass->validate())) 
             throw new BadRequestHttpException('Email or(and) reset code or(and) password is (are) empty', 400);
 
-            //$email = \Yii::$app->request->getbodyParam('email');
-            //$resetCode = \Yii::$app->request->getbodyParam('reset-code');
-            //$password = \Yii::$app->request->getbodyParam('password');
-        
-        $authModel=$this->authModel;
+        $email = $params['email'];
+        $resetCode = $params['reset_code'];
+        $password = $params['password'];
 
-        if (!($authUser = $authModel::findByEmail($email)))
-        //if (!$authUser)
+        if (!($authUser = $authModel->findByEmail($email)))
             throw new NotFoundHttpException('User was not found, check the email', 404);
 
-        $resetPass = $this->modelClass;
-        
-        if (!($authResetPass = $resetPass::findByResetCode($resetCode)))
+        if (!($authResetPass = $resetPass->findByResetCode($resetCode)))
         	throw new NotFoundHttpException('User was not found, check the reset code', 404);;
 
         if (!($authUser->id == $authResetPass->user_id)) 
@@ -47,6 +49,7 @@ class DoResetAction extends \yii\rest\Action
 
         if ($authResetPass->used == 1)
             throw new BadRequestHttpException('Reset code has been used', 400);
+        
         if ((int)($authResetPass->valid_at - time()) < 0 ) 
         	throw new BadRequestHttpException('Reset code is expired', 400);
         
@@ -54,6 +57,6 @@ class DoResetAction extends \yii\rest\Action
             throw new ServerErrorHttpException('Failed to action for unknown reason.');
         
         if (!$authResetPass->usedOne()) 
-       	    throw new ServerErrorHttpException('Failed to action for unknown reason.');
+       	   throw new ServerErrorHttpException('Failed to action for unknown reason.');
     }
 }

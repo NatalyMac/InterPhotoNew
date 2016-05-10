@@ -8,7 +8,7 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
-       
+       /*
        [
         'class' => 'yii\filters\ContentNegotiator',
             'formats' => 
@@ -17,7 +17,7 @@ $config = [
             'application/xml' => Response::FORMAT_XML,
             ],
         ],
-        
+        */
         'log',
         ],
 
@@ -28,7 +28,7 @@ $config = [
         
         'formatter' => [
             'datetimeFormat' => 'yyyy-MM-dd HH:mm:ss',
-            'defaultTimeZone' => 'UTC',
+            'defaultTimeZone' => 'GMT',
         ], 
 
         'request' => [
@@ -95,7 +95,7 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
         
         'urlManager' => [
-            'enablePrettyUrl' => true,
+          //  'enablePrettyUrl' => true,
             'cache' => false,
             'showScriptName' => false,
             'rules' => 
@@ -123,6 +123,11 @@ $config = [
                 ],
 
                 ['class' => 'yii\rest\UrlRule', 
+                //'pluralize' => 'false',
+                'controller' => 'album-clients',
+                ],
+
+                ['class' => 'yii\rest\UrlRule', 
                // 'pluralize' => 'false',
                 'controller' => 'albums',
                 'extraPatterns' => 
@@ -135,6 +140,8 @@ $config = [
                      '<id:\d+>/images/'                      => 'options-images',
                     ]
                 ],
+
+            
            ],
         ],
         

@@ -20,27 +20,24 @@ class AskResetAction extends \yii\rest\Action
     
     public function run()
     {
-        if (!\Yii::$app->request->getbodyParams())
-             throw new BadRequestHttpException('Email is  empty', 400);
-            
-        if (!($email = \Yii::$app->request->getbodyParam('email')))
-           throw new BadRequestHttpException('Email is empty', 400);
 
-        //$email = \Yii::$app->request->getbodyParam('email');
-            
-        $validator = new \yii\validators\EmailValidator();      
-    
-        if (!$validator->validate($email, $error)) 
+        $email = null;
+        $params = \Yii::$app->request->getbodyParams();
+        $authModel = new $this->authModel;
+        $authModel->scenario = 'askreset';
+        $authModel->attributes = $params;
+        
+        if (!$authModel->validate()) 
             throw new BadRequestHttpException('Email is empty', 400);
 
-        $authModel=$this->authModel;
+        $email = $params['email'];
 
-        if (!($authUser = $authModel::findByEmail($email)))
+        if (!($authUser = $authModel->findByEmail($email)))
             throw new NotFoundHttpException('User was not found, check the email', 404);
     
         $resetPass = new $this->modelClass;
         if ($resetPass->isSetCode($authUser->id)) 
-           throw new BadRequestHttpException('Email with your reset code have been sent', 400);;
+           throw new BadRequestHttpException('Email with your reset code has been sent', 400);;
 
         if (!($resetCode = $resetPass->setResetCode($authUser)))
            throw new ServerErrorHttpException('Failed to action for unknown reason.');

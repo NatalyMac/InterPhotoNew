@@ -2,6 +2,7 @@
 namespace app\controllers\auth;
 
 use yii\rbac\Rule;
+use yii\web\NotFoundHttpException;
 
 //check user_id and 'id' from request  
 class OwnerRule extends Rule
@@ -25,8 +26,14 @@ class OwnerRule extends Rule
               \Yii::$app->controller->allowId = 'id';
               return true;
             } 
+        
         $id = \Yii::$app->request->getQueryParam('id');
-        //\Yii::$app->controller->allowId);
-          return $id == \Yii::$app->user->identity->id;
+
+        $model = new \Yii::$app->controller->modelClass;
+
+        if (!$modelAsk = $model->findOne($id)) 
+            throw new NotFoundHttpException('Object not found', 404);
+      
+            return $id == \Yii::$app->user->identity->id;
   }
 }

@@ -8,6 +8,8 @@ use yii\behaviors\TimestampBehavior;
 class ResetPass extends \yii\db\ActiveRecord
 {
 
+    const SCENARIO_DO = 'do';
+
     public static function tableName()
     {
         return 'reset_pass';
@@ -24,7 +26,13 @@ class ResetPass extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
-
+    
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_DO] = ['reset_code'];
+        return $scenarios;
+    }
     public function attributeLabels()
     {
         return [
@@ -67,8 +75,11 @@ class ResetPass extends \yii\db\ActiveRecord
         $this->reset_code = $this->generateResetCode();
         $this->used = 0;
         $this->valid_at = time()+3600;
-        if (!$this->save()) return false;
-            return $this->reset_code;
+        
+        if (!$this->save()) 
+            return false;
+        
+        return $this->reset_code;
    }
 
     public static function findByResetCode($resetCode)
@@ -79,8 +90,11 @@ class ResetPass extends \yii\db\ActiveRecord
     public function usedOne()
     {
         $this->used = 1;
-        if (!$this->update()) return false;
-            return true;
+        
+        if (!$this->update()) 
+            return false;
+        
+        return true;
     }
 
     public static function isSetCode($userId)

@@ -25,7 +25,6 @@ class StateResetAction extends \yii\rest\Action
 
         if (!($resetCode = \Yii::$app->request->getHeaders()['reset-code']))
             throw new BadRequestHttpException ('Nothing to answer, you need to send reset code header', 400);
-        //$resetCode = \Yii::$app->request->getHeaders()['reset-code'];
 
         $resetPass = $this->modelClass;
 

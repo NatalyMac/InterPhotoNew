@@ -3,9 +3,13 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use app\models\ResizedPhotos;
+
 
 class AlbumImages extends \yii\db\ActiveRecord
 {
+    public $resized;
    
     public static function tableName()
     {
@@ -14,9 +18,10 @@ class AlbumImages extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'image'], 'required'],
+            [['image'], 'required'],
+           // [['image'], 'file', 'extensions' => 'png, jpg'],
             [['album_id'], 'integer'],
-            [['image'], 'string'],
+            [['image'], 'string', 'max' => 50],
             [['created_at'], 'safe'],
             [['album_id'], 'exist', 'skipOnError' => true, 'targetClass' => Albums::className(), 'targetAttribute' => ['album_id' => 'id']],
             [['album_id'], 'default', 'value' => function() {return \Yii::$app->request->queryParams['id'];}
@@ -24,6 +29,7 @@ class AlbumImages extends \yii\db\ActiveRecord
         ];
     }
 
+/*
     public function fields() 
     {
     $fields = parent::fields();
@@ -32,7 +38,7 @@ class AlbumImages extends \yii\db\ActiveRecord
 
     return $fields;
     }
-    
+  */  
     public function attributeLabels()
     {
         return [
@@ -51,5 +57,49 @@ class AlbumImages extends \yii\db\ActiveRecord
     public function getOrderImages()
     {
         return $this->hasMany(OrderImages::className(), ['image_id' => 'id']);
+    }
+    
+
+    public function getResizedPhotos()
+           {
+               return $this->hasMany(ResizedPhotos::className(), ['image_id' => 'id']);
+           }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                ],
+            ],
+        ];
+    }
+    
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) 
+        {
+            if (Albums::findOne($this->album_id))
+                return true;
+        } else {
+           return false;
+        }   
+    }
+
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert,$changedAttributes);      
+            foreach($this->resized as $resizedPhotos) 
+            {
+                $resizedPhotos->image_id = $this->id;
+                
+                if (!$resizedPhotos->save()) 
+                    return false;
+            }
+        return true;
     }
 }

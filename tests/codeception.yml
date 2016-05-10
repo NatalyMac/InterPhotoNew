@@ -11,7 +11,7 @@ settings:
 modules:
     config:
         Db:
-            dsn: 'mysql:host=localhost;dbname=myPhoto'
-            user: 'root'
-            password: 'AcidBurn'
-            dump: tests/_data/dump.sql
+         dsn: 'mysql:host=localhost;dbname=photoTest'
+         user: 'root'
+         password: 'AcidBurn'
+       

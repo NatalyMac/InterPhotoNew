@@ -1,0 +1,151 @@
+[
+    {
+        "name": "symfony/finder",
+        "version": "v2.2.11",
+        "version_normalized": "2.2.11.0",
+        "target-dir": "Symfony/Component/Finder",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/finder.git",
+            "reference": "0fbb7672173a7caab9d266dd26de94b6bc044918"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/finder/zipball/0fbb7672173a7caab9d266dd26de94b6bc044918",
+            "reference": "0fbb7672173a7caab9d266dd26de94b6bc044918",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2013-11-25 10:21:43",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Finder\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            },
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            }
+        ],
+        "description": "Symfony Finder Component",
+        "homepage": "http://symfony.com"
+    },
+    {
+        "name": "symfony/console",
+        "version": "v2.2.11",
+        "version_normalized": "2.2.11.0",
+        "target-dir": "Symfony/Component/Console",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/console.git",
+            "reference": "89e82ad2d09ce753359efc942ce6309053023c47"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/console/zipball/89e82ad2d09ce753359efc942ce6309053023c47",
+            "reference": "89e82ad2d09ce753359efc942ce6309053023c47",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2013-11-25 08:44:14",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Console\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            },
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            }
+        ],
+        "description": "Symfony Console Component",
+        "homepage": "http://symfony.com"
+    },
+    {
+        "name": "suncat/symfony-console-extra",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "target-dir": "SunCat/Console",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/suncat2000/symfony-console-extra.git",
+            "reference": "891967645d38febb5cca0e1d05d230256122ffea"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/suncat2000/symfony-console-extra/zipball/891967645d38febb5cca0e1d05d230256122ffea",
+            "reference": "891967645d38febb5cca0e1d05d230256122ffea",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "symfony/console": "2.2.*@dev",
+            "symfony/finder": "2.2.*@dev"
+        },
+        "time": "2013-03-21 22:53:30",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "SunCat\\Console\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nikolay Ivlev",
+                "email": "nikolay.kotovsky@gmail.com",
+                "homepage": "http://www.creotika.ru"
+            }
+        ],
+        "description": "Symfony 2 Console Extra for console-commands micro library",
+        "keywords": [
+            "command",
+            "console"
+        ]
+    }
+]

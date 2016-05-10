@@ -20,19 +20,20 @@ class AuthorRule extends Rule
 
         if (isset($params['model'])) $model = $params['model'];
         
-        $model = new \Yii::$app->controller->modelClass;
-        
         if (!\Yii::$app->request->getQueryParam('id')) 
-            {
-              \Yii::$app->controller->allowId = 'user_id';
-              return true;
+            { 
+                \Yii::$app->controller->allowId = 'user_id';
+                    return true;
             } 
 
         $id = \Yii::$app->request->getQueryParam('id');
-        if (!$m = $model->findOne($id)) 
+        $model = new \Yii::$app->controller->modelClass;
+        
+        if (!$modelAsk = $model->findOne($id))
             throw new NotFoundHttpException('Object not found', 404);
+        
         \Yii::$app->controller->allowId = 'user_id';
-            return $m->user_id == \Yii::$app->user->identity->id;
+            return $modelAsk->user_id == \Yii::$app->user->identity->id;
     }
     
 }

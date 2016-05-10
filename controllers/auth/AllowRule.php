@@ -41,5 +41,11 @@ class AllowRule extends Rule
         if (!($album = $model::getClientAlbum($id, $userId))) return false;
             
             return ($album);
+
+
+            /*
+               return AlbumClients::findOne(['albums_id' => \Yii::$app->request->queryParams['id'], 
+                                      'users_id' => \Yii::$app->user->identity->id]);
+*/
     }
 }

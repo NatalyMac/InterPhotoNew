@@ -26,12 +26,8 @@ class UsersSearch extends Users
 
     public function search($params)
     {
-        $this->load($params);
-        if (!$this->validate()) 
-            {
-                $query->where('0=1');
-                return $dataProvider;
-            }
+       
+        $this->attributes = $params;
         $query = static::find();
         $dataProvider = new ActiveDataProvider(['query' => $query]);
 

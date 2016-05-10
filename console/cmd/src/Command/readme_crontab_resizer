@@ -1,0 +1,69 @@
+При загрузке системы, запускается демон cron и проверяет очередь заданий at и заданий пользователей в файлах crontab.
+Чтобы поставить наше задание на исполнение сron, нужно создать файл crontab.
+Этот файл создается для текущего пользователя системы. 
+Соответственно у текущего пользователя должны быть права на исполнение команды, 
+файл должен быть исполняемым.
+
+1. В терминале набрать команду crontab -e - редактирование файла crontab
+2. Откроется редактор с файлом crontab. Это может быть nano, vim  и т.д.
+------------------------------------------------------------------------------
+# Edit this file to introduce tasks to be run by cron.
+#
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+#
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').#
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+#
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+#
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+#
+# For more information see the manual pages of crontab(5) and cron(8)
+#
+# m h  dom mon dow   command
+
+SHELL=/bin/bash
+MAILTO=natali
+0-59 * * * *  /var/www/interPhoto/console/cmd/app/console resize:photo /var/www/interPhoto/console/cmd/src/Resizer/config.json
+----------------------------------------------------------------------------------------------------------
+Здесь уже могуть быть команды, или только комментарии
+
+3. Добавить нашу команду на исполнение, указать полный путь
+0-59 * * * *  /var/www/interPhoto/console/cmd/app/console resize:photo /var/www/interPhoto/console/cmd/config/config_resizer.json
+
+Наше задание выполняется каждую минуту
+
+4. Наша команда требует файл конфигурации config_resizer.json в  каталоге /var/www/interPhoto/console/cmd/config 
+{
+"serverName":"",
+"db":"",
+"userName":"",
+"password":"",
+"size":[100,400], // размеры выходных картинок
+"imageDir":"......./upload/"
+}
+
+5. Общий формат задания времени выполнения
+------------------------------------------------
+минута час день_месяца месяц день_недели команда
+------------------------------------------------
+
+Допустимые значения:
+минута        от 0 до 59
+час           от 0 до 23
+день_месяца   от 1 до 31
+месяц         от 1 до 12 (можно три буквы из названия месяца,
+                          регистр не имеет значения от jan до dec)
+день_недели   от 0 до 6  (0 это воскресенье, 
+                          можно писать от sun до sat)
+
+6. Посмотреть crontab 
+crontab -l

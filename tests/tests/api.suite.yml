@@ -1,15 +1,16 @@
 class_name: ApiGuyTester
 modules:
-    enabled: [PhpBrowser, REST, Yii2, Db, ApiGuyHelper]
+    enabled: [PhpBrowser, REST, Asserts, Db, ApiGuyHelper]
     config:
         PhpBrowser:
             url: http://localhost/
         REST:
             url: http://127.0.0.1/interPhoto/web/index.php/
         Db:
-            dsn: 'mysql:host=localhost;dbname=myPhoto'
-            user: 'root'
-            password: 'AcidBurn'
-            dump: tests/_data/dump.sql
-         Yii2:
-            configFile: 'codeception/config/api.php'
+         dsn: 'mysql:host=localhost;dbname=photoTest'
+         user: 'root'
+         password: 'AcidBurn'
+
+   
+       
+

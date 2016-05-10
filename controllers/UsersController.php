@@ -16,7 +16,8 @@ class UsersController extends MainController
     public $modelClass       = '\app\models\Users';
     public $modelName        = 'Users';
     public $searchModelClass = '\app\models\UsersSearch';
-    public $searchModelName  = 'UsersSearch';
+    public $registerScenario =  Users::SCENARIO_REGISTER;
+    //public $searchModelName  = 'UsersSearch';
     
     
 /**
@@ -194,10 +195,31 @@ class UsersController extends MainController
  *        "type": "yii\\web\\ForbiddenHttpException"
  *       }
  */
-    public function actionCreate()
-    {
-        return parent::actionCreate();
-    }
+    //public function actionCreate()
+    //{
+        
+      //  return parent::actionCreate();
+    //}
+
+public function actions() 
+    {   
+        $actions = parent::actions();
+        
+        $actions['create'] = [
+            'class' => 'yii\rest\CreateAction',
+            'modelClass' => $this->modelClass,
+            'scenario' => $this->registerScenario,
+            ];
+
+          //$actions['update'] = [
+            //'class' => 'yii\rest\CreateAction',
+            //'modelClass' => $this->modelClass,
+            //'scenario' => $this->registerScenario,
+            //];
+
+        return $actions;
+    }      
+
 
 /**
  * @api {delete} /users/id  Delete specific user

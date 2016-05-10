@@ -3,8 +3,11 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Model;
+use yii\data\ActiveDataProvider;
 use yii\behaviors\BlameableBehavior;
 use \app\models\AlbumClients;
+
 
 class Albums extends \yii\db\ActiveRecord
 {
@@ -107,11 +110,6 @@ class Albums extends \yii\db\ActiveRecord
               ->all();
             return $album;
     }
-
-
-
-
-
 
 
 }

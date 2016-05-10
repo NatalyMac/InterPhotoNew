@@ -19,7 +19,7 @@ class MainController extends ActiveController
     public $modelClass          = null;
     public $modelName           = null;
     public $searchModelClass    = null;
-    public $searchModelName     = null;
+    //public $searchModelName     = null;
     public $linkedModelName     = null ;
     // $allowId is indicator to restrict index data by current user or alloewd items if it is requared by autorization rules 
     // available values 'id', 'user_id', 'albums'
@@ -28,6 +28,7 @@ class MainController extends ActiveController
     public $reservedParams   = ['sort','q'];
 
     public $serializer = 'app\controllers\MySerializer';
+    
     
     public function actions() 
     {   
@@ -46,8 +47,9 @@ class MainController extends ActiveController
         $behaviors['authenticator'] = 
             [
                 'class' => HttpBearerAuth::className(),
-            ];
+            ]; 
         // user autherization
+        
         $behaviors['access'] = [
             'class' => AccessControl::className(),
             'except' => ['options'],
@@ -109,7 +111,7 @@ class MainController extends ActiveController
                             return true;
                     }
                 ],
-                /*
+                
                 [
                     'actions' => ['view-'.strtolower($this->linkedModelName)],
                     'allow' => true,
@@ -119,6 +121,7 @@ class MainController extends ActiveController
                             return true;
                     }
                 ],
+                
                 [
                     'actions' => ['create-'.strtolower($this->linkedModelName)],
                     'allow' => true,
@@ -128,6 +131,7 @@ class MainController extends ActiveController
                             return true;
                     }
                 ],
+                
                 [
                     'actions' => ['update-'.strtolower($this->linkedModelName)],
                     'allow' => true,
@@ -146,11 +150,11 @@ class MainController extends ActiveController
                             return true;
                     }
                 ],
-                */
+                
             ],//rules
-        ];
+       ];
              return $behaviors;
-    }
+   }
     
 
     public function indexDataProvider() 
@@ -158,9 +162,9 @@ class MainController extends ActiveController
         $filter = $this->getFilterParams();
         //set key  as id or user_id (depending on model) => current user
         $filter[$this->allowId] = \Yii::$app->user->identity->id;
-        $searchByAttr[$this->searchModelName] = $filter;
         $searchModel = new $this->searchModelClass();
-            return $searchModel->search($searchByAttr);
+            return $searchModel->search($filter);
+      
            
     }
     
@@ -169,8 +173,7 @@ class MainController extends ActiveController
         $params = \Yii::$app->request->getQueryParams();
         $model = new $this->modelClass;
         $modelAttr = $model->attributes;
-        
-        // array of filters as key => value array from GET request
+    
         $filter = [];
             if (!empty($params)) 
             {
@@ -178,11 +181,12 @@ class MainController extends ActiveController
                 {
                     if(!is_scalar($key) or !is_scalar($value)) 
                         throw new BadRequestHttpException('400 Bad Request. Parameters are not scalar',400);
-                    // not reserved words and is model attributes
-                    if (!in_array(strtolower($key), $this->reservedParams) && ArrayHelper::keyExists($key, $modelAttr, false)) 
-                        $filter[$key] = $value;
+                    if (!((in_array(strtolower($key), $this->reservedParams)) or ArrayHelper::keyExists($key, $modelAttr, false)))
+                        throw new BadRequestHttpException('400 Bad Request. Parameters are not allowed or correct',400);
+                    
+                    $filter[$key] = $value;
                 }
             } 
-        return $filter;
+            return $filter;
     }
 }

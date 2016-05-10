@@ -19,25 +19,17 @@ class LogoutAction extends \yii\rest\Action
 
     public function run()
     {    
-       $matches = array();
-        if (!$tokenHeader = \Yii::$app->request->headers['authorization']) 
-            throw new BadRequestHttpException('Incorrect token', 400);
-   
-        if (!is_scalar($tokenHeader))
-            throw new BadRequestHttpException('Incorrect token', 400);
-
+        $matches = array();
+        $tokenHeader = \Yii::$app->request->headers['authorization'];
         if (!preg_match_all("/Bearer\s.{32}/", $tokenHeader, $matches))
             throw new BadRequestHttpException('Incorrect token', 400);
 
         $token = substr_replace($matches[0][0], '',0, strlen($this->typeAuth));
-
-        if (!$token)  
-            throw new BadRequestHttpException('Incorrect token', 400);
     
         $authModel=$this->modelClass;
     
-        if (!$authUser = $authModel::resetToken($token))
-            throw new NotFoundHttpException('No such token', 404);
+        if (!$authUser = $authModel::deleteToken($token))
+            throw new NotFoundHttpException('There is not such token', 404);
     
         $this->setAuthenticateHeader();
     }

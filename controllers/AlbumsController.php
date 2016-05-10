@@ -13,16 +13,19 @@ use yii\web\NotFoundHttpException;
 use \app\models\AlbumImages;
 use yii2\rest\OptionsAction;
 use yii\data\ActiveDataProvider;
+use app\models\UploadForm;
+use yii\web\UploadedFile;
+
 
 class AlbumsController extends MainController
 {
     public $modelClass       = '\app\models\Albums';
     public $modelName        = 'Albums';
     public $searchModelClass = '\app\models\AlbumsSearch';
-    public $searchModelName  = 'AlbumsSearch';
+   // public $searchModelName  = 'AlbumsSearch';
     public $linkedModelClass = '\app\models\AlbumImages';
     public $linkedModelName  = 'Images';
-    
+    public $uploadModelClass = '\app\models\UploadForm';
 /**
  * @api {get} /albums Index albums
  * @apiName Index Albums
@@ -398,11 +401,16 @@ class AlbumsController extends MainController
  *       }
  */
         $actions['create-images'] = [
-            'class' => 'yii\rest\CreateAction',
-            'modelClass' => $this->linkedModelClass,
-            'findModel' => [$this, 'findModelImages']
+           // 'class' => 'yii\rest\CreateAction',
+            'class'=> 'app\controllers\actions\CreateImageAction',
+            'modelClass' => $this->uploadModelClass,
+//            'findModel' => [$this, 'findModelImages']
             ];       
-        
+   
+
+
+
+
         
 /**
  * @api {delete} /albums/id/images/id  Delete specific image of the specific album
