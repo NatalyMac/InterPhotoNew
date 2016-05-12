@@ -3,18 +3,15 @@ namespace app\controllers;
  
 use app\models\Users; 
 use app\models\Albums;
-use app\controllers\auth\AuthorRule;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
-use yii\web\UnprocessableEntityHttpException;
-use yii\filters\AccessControl;
-use app\controllers\MainController;
 use yii\web\NotFoundHttpException;
+use app\controllers\MainController;
 use \app\models\AlbumImages;
 use yii2\rest\OptionsAction;
 use yii\data\ActiveDataProvider;
 use app\models\UploadForm;
-use yii\web\UploadedFile;
+
 
 
 class AlbumsController extends MainController
@@ -22,7 +19,6 @@ class AlbumsController extends MainController
     public $modelClass       = '\app\models\Albums';
     public $modelName        = 'Albums';
     public $searchModelClass = '\app\models\AlbumsSearch';
-   // public $searchModelName  = 'AlbumsSearch';
     public $linkedModelClass = '\app\models\AlbumImages';
     public $linkedModelName  = 'Images';
     public $uploadModelClass = '\app\models\UploadForm';
@@ -33,9 +29,12 @@ class AlbumsController extends MainController
  *
  * @apiDescription Returns the users' albums according users permissions.
  * Administrator can get all albums.
- * Photographer and client only their own (allowed) albums.
+ * Photographer and client only their own (allowed) albums. 
+ * If photographer or client doesn't have any own or allowed albums index will be empty.
  * 
  * @apiParam No
+ * @apiParam {String} name  name of the album for filtering like ?name=Wedding
+ * @apiHeader {String} Authorization Users unique access-token like Bearer ..... 
  *
  * @apiSuccess {Json} List List of the Albums like [{key:value,}, {key:value,}]
  *
@@ -80,6 +79,7 @@ class AlbumsController extends MainController
  * Photographer and client only their own (allowed) albums.
  * 
  * @apiParam {Number} ID Album ID
+ * @apiHeader {String} Authorization Users unique access-token like Bearer .....
  *
  * @apiSuccess {Json} Album the Album like {key:value,}
  *
@@ -132,6 +132,7 @@ class AlbumsController extends MainController
  * 
  * @apiParam {Number} ID Album ID
  * @apiParam {Json} name Album name like { "name": "Peoples"}
+ * @apiHeader {String} Authorization Users unique access-token like Bearer .....  
  *
  * @apiSuccess {Json} Album the Album like {key:value,}
  *
@@ -179,10 +180,10 @@ class AlbumsController extends MainController
  * @apiGroup Albums
  *
  * @apiDescription Creates a new album according users permissions.
- * Administrator, Photographer and Client  can create album
+ * Administrator, Photographer can create album
  *
- * @apiParam {Number} ID Album ID
  * @apiParam {Json} name Album name like { "name": "Animals"}
+ * @apiHeader {String} Authorization Users unique access-token like Bearer ..... 
  *
  * @apiSuccess (Success 201 Created) {Json} Album the Album like {key:value,}
  *
@@ -204,7 +205,17 @@ class AlbumsController extends MainController
  *        "message":"You are requesting with an invalid credential.",
  *        "code":0,"status":401,"type":"yii\\web\\UnauthorizedHttpException"
  *     }
- * 
+ * @apiError Forbidden <code>403</code> User's not allowed to action
+ *
+ * @apiErrorExample Error-Response:
+ *     403 Forbidden
+ *     {
+ *        "name": "Forbidden",
+ *        "message": "You are not allowed to perform this action.",
+ *        "code": 0,
+ *        "status": 403,
+ *        "type": "yii\\web\\ForbiddenHttpException"
+ *       }
  */
     public function actionCreate()
     {
@@ -221,6 +232,7 @@ class AlbumsController extends MainController
  * Photographer and client are not allowed to action.
  * 
  * @apiParam {Number} ID Album ID
+ * @apiHeader {String} Authorization Users unique access-token like Bearer ..... 
  *
  * @apiSuccess (Success 204 No content) Empty
  *
@@ -270,17 +282,45 @@ class AlbumsController extends MainController
  *
  * @apiDescription Returns the unique id image of the specific album  according users permissions.
  * Administrator can view any image of any album.
- * Photographer and client can view image only of  their own (allowed) albums.
- * 
- * @apiParam {number} ID Image ID image
+ * Photographer and client can view image only of their own (allowed) albums.
+ * Photographer gives access  to his own albums  to the client.
+ *
+ * @apiParam {number} ID_Album Album ID album 
+ * @apiParam {number} ID_Image ID image
+ * @apiHeader {String} Authorization Users unique access-token like Bearer ..... 
  *
  * @apiSuccess {Json} Image the Image like {key:value,}
+ * @apiSuccess {Json} ResizedImages the Resized Images like {key:value,}
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *        {
- *        to do
- *         }
+ *     {
+ *         "Image": {
+ *         "id": 11,
+ *         "album_id": 16,
+ *         "image": "users_cache.png",
+ *         "created_at": 1462993051
+ *     },
+ *        "Resized Images": [
+ *     [
+ *     {
+ *       "status": "complete",
+ *       "image_id": 11,
+ *       "id": 21,
+ *       "size": "100",
+ *       "origin": "users_cache.png",
+ *       "comment": null
+ *     },
+ *     {
+ *       "status": "complete",
+ *       "image_id": 11,
+ *       "id": 22,
+ *       "size": "400",
+ *       "origin": "users_cache.png",
+ *       "comment": null
+ *     } 
+ *      ]]
+ *      }
  *
  * @apiError Unauthorized <code>401</code> User needs to be autorized to action
  *
@@ -312,73 +352,36 @@ class AlbumsController extends MainController
        
         
 /**
- * @api {put} /albums/id/images/id  Update specific image of the specific album
+ * @api {put} /albums/id/images/id  Update image 
+ * @apiDescription Action is not allowed. To update photo you should delete the photo  and create new one.
  * @apiName Update Image
  * @apiGroup Images
  *
- * @apiDescription Update the unique id image of the specific album  according users permissions.
- * Administrator can update any image of any album.
- * Photographer and client can update image only of  their own (allowed) albums.
- * 
- * @apiParam {number} ID Image 
- * @apiParam {string} Image to do
  *
- * @apiSuccess {Json} Image the Image like {key:value,}
+ * @apiError Not_allowed <code>405</code> Method is not allowed
  *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *        {
- *        to do
- *         }
- *
- * @apiError Unauthorized <code>401</code> User needs to be autorized to action
- *
- * @apiErrorExample Error-Response:
- *     401 Unauthorized
- *     {
- *        "name":"Unauthorized",
- *        "message":"You are requesting with an invalid credential.",
- *        "code":0,"status":401,"type":"yii\\web\\UnauthorizedHttpException"
- *     }
- * @apiError Forbidden <code>403</code> User's not allowed to action
- *
- * @apiErrorExample Error-Response:
- *     403 Forbidden
- *     {
- *        "name": "Forbidden",
- *        "message": "You are not allowed to perform this action.",
- *        "code": 0,
- *        "status": 403,
- *        "type": "yii\\web\\ForbiddenHttpException"
- *       }
  */
         $actions['update-images'] = [
-            'class' => 'yii\rest\UpdateAction',
-            'modelClass' => $this->modelClass,
-            'findModel' => [$this, 'findModelImages']
+            'class'=> 'yii\rest\OptionsAction',
             ];       
         
         
 /**
- * @api {post} /albums/id/images  Create  image of the specific album
+ * @api {post} /albums/id/images  Create  image in the specific album
  * @apiName Create Image
  * @apiGroup Images
  *
- * @apiDescription Creates image of the specific album  according users permissions.
+ * @apiDescription Creates image in the specific album  according users permissions.
  * Administrator can create any image of any album.
- * Photographer can create  image in their own albums.
+ * Photographer can create  image in their own albums. Client doesn't have permission to creat image.
  * 
- * @apiParam {string} to do
- * @apiParam {string} to do
- *
- * @apiSuccess {Json} Image the Image like {key:value,}
+ * @apiParam {file} Image File of image to upload jpg, png 
+ * @apiHeader {String} Authorization Users unique access-token like Bearer .....  
+ * @apiHeader {String} Content-Type    multipart/form-data 
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *        {
- *        to do
- *         }
- *
+ *      
  * @apiError Unauthorized <code>401</code> User needs to be autorized to action
  *
  * @apiErrorExample Error-Response:
@@ -401,36 +404,28 @@ class AlbumsController extends MainController
  *       }
  */
         $actions['create-images'] = [
-           // 'class' => 'yii\rest\CreateAction',
             'class'=> 'app\controllers\actions\CreateImageAction',
             'modelClass' => $this->uploadModelClass,
-//            'findModel' => [$this, 'findModelImages']
             ];       
-   
-
-
-
-
-        
+           
 /**
- * @api {delete} /albums/id/images/id  Delete specific image of the specific album
+ * @api {delete} /albums/id/images/id  Delete specific image in the specific album
  * @apiName Delete Image
  * @apiGroup Images
  *
- * @apiDescription Returns the unique id image of the specific album  according users permissions.
- * Administrator can view any image of any album.
- * Photographer and client can view image only of  their own (allowed) albums.
+ * @apiDescription Delets the unique id image in the specific album  according users permissions.
+ * Administrator can delete any image of any album.
+ * Photographer can delete image only of  their own (allowed) albums.
  * 
- * @apiParam {string} ID/images/ID Album ID/images/ID image
+ * @apiParam {number} ID_Album ID album 
+ * @apiParam {number} ID_Image ID image
+ * @apiHeader {String} Authorization Users unique access-token like Bearer ..... 
  *
- * @apiSuccess {Json} Image the Image like {key:value,}
+ * @apiSuccess (Success 204 No content) Empty
  *
  * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *        {
- *        to do
- *         }
- *
+ *     HTTP/1.1 204 No content
+ *     
  * @apiError Unauthorized <code>401</code> User needs to be autorized to action
  *
  * @apiErrorExample Error-Response:
@@ -454,8 +449,8 @@ class AlbumsController extends MainController
  */
         $actions['delete-images'] = [
              'class' => 'yii\rest\DeleteAction',
-             'modelClass' => $this->linkedModelClass,
-             'findModel' => [$this, 'findModelImages']
+             'modelClass' => $this->modelClass,
+             'findModel' => [$this, 'findModelImageDelete']
             ];       
         
         
@@ -468,15 +463,49 @@ class AlbumsController extends MainController
  * Administrator can index any image of any album.
  * Photographer and client can index image only of  their own (allowed) albums.
  * 
- * @apiParam No
+ * @apiParam {number} ID Album ID album 
+ * @apiParam {String} Status You can check of the resizing image state. Just type ?status-=complete ot status=new. The status=complete means 
+ * that images was resized
+ * @apiHeader {String} Authorization Users unique access-token like Bearer ..... 
  *
  * @apiSuccess {Json} List of images the Image like {key:value,}
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *        {
- *        to do
- *         }
+ *       [
+ * {
+ *   "id": 11,
+ *   "album_id": 16,
+ *   "image": "users_cache.png",
+ *   "created_at": 1462993051
+ * },
+ * {
+ *   "id": 15,
+ *   "album_id": 16,
+ *   "image": "users_cache.png",
+ *   "created_at": 1462994046
+ * },
+ *    
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK     ]
+ * [
+ * {
+ *   "image": "users_cache.png",
+ *   "id": "11",
+ *   "status": "complete"
+ * },
+ * {
+ *   "image": "users_cache.png",
+ *   "id": "15",
+ *   "status": "complete"
+ * },
+ * {
+ *   "image": "users_cache.png",
+ *   "id": "16",
+ *   "status": "complete"
+ * }
+ *]
+ *
  *
  * @apiError Unauthorized <code>401</code> User needs to be autorized to action
  *
@@ -510,14 +539,62 @@ class AlbumsController extends MainController
 
     public function prepareDataProviderImages()
     {
-        $params = \Yii::$app->request->queryParams['id'];
+        $params = $this->getFilterParamsImages();
+       // var_dump($params);
         $modelClass = $this->modelClass;
-        if (!($modelClass::findOne($params)))
+        
+        if (!($modelClass::findOne($params['id'])))
             throw new NotFoundHttpException('Object not found',404);
-            return  $modelClass::findOne($params)->albumImages;
+        
+        $searchModel = new \app\models\AlbumImagesSearch;
+        
+            return $searchModel->search($params);
     }
 
+    public function getFilterParamsImages()
+    {
+        $params = \Yii::$app->request->getQueryParams();
+        $model = new $this->linkedModelClass;
+        $modelAttr = $model->attributes;
+        $modelAttr['status'] = null;
+    
+        $filter = [];
+        $filter['status'] = null;
+            if (!empty($params)) 
+            {
+                foreach ($params as $key => $value) 
+                {
+                    if(!is_scalar($key) or !is_scalar($value)) 
+                        throw new BadRequestHttpException('400 Bad Request. Parameters are not scalar',400);
+                    if (!((in_array(strtolower($key), $this->reservedParams)) or ArrayHelper::keyExists($key, $modelAttr, false)))
+                        throw new BadRequestHttpException('400 Bad Request. Parameters are not allowed or correct',400);
+                    
+                    $filter[$key] = $value;
+                }
+            }
+            return $filter;
+    }
+
+
     public function findModelImages()
+       {
+            if (\Yii::$app->request->queryParams)
+            {
+            
+            if ((!$image = AlbumImages::findOne(\Yii::$app->request->queryParams['image_id'])) 
+                and
+                $image['album_id'] !== \Yii::$app->request->queryParams['id']) 
+                throw new NotFoundHttpException($message = "Object not found: " 
+                                            . \Yii::$app->request->queryParams['image_id']);
+        
+            $images['Image'] = $image;
+            $images['Resized Images']  = [$image->resizedPhotos];
+
+                return $images;
+            }
+        }
+       
+       public function findModelImageDelete()
        {
             if (\Yii::$app->request->queryParams)
         {
@@ -532,6 +609,5 @@ class AlbumsController extends MainController
                 }
         }
     }
-
 
 }

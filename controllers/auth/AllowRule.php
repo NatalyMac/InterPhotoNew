@@ -2,7 +2,7 @@
 namespace app\controllers\auth;
 
 use yii\rbac\Rule;
-//use app\models\Albums;
+use yii\web\NotFoundHttpException;
 
 /**
  * Проверяем authorID на соответствие с пользователем, переданным через параметры
@@ -29,23 +29,18 @@ class AllowRule extends Rule
             {
               
                 \Yii::$app->controller->allowId = 'albums';
-
                     return true;
             } 
 
-        $album = null;
-        $model = \Yii::$app->controller->modelClass;
+        $model = new \Yii::$app->controller->modelClass;
         $id = \Yii::$app->request->getQueryParam('id');
+
+        if (!$modelAsk = $model->findOne($id))
+            throw new NotFoundHttpException('Object not found', 404);
+
         $userId =  \Yii::$app->user->identity->id;
-        
-        if (!($album = $model::getClientAlbum($id, $userId))) return false;
+        $model::getAlbumAllow($id, $userId);
             
-            return ($album);
-
-
-            /*
-               return AlbumClients::findOne(['albums_id' => \Yii::$app->request->queryParams['id'], 
-                                      'users_id' => \Yii::$app->user->identity->id]);
-*/
+            return  $model::getAlbumAllow($id, $userId);
     }
 }

@@ -19,7 +19,6 @@ class AlbumImages extends \yii\db\ActiveRecord
     {
         return [
             [['image'], 'required'],
-           // [['image'], 'file', 'extensions' => 'png, jpg'],
             [['album_id'], 'integer'],
             [['image'], 'string', 'max' => 50],
             [['created_at'], 'safe'],
@@ -29,16 +28,7 @@ class AlbumImages extends \yii\db\ActiveRecord
         ];
     }
 
-/*
-    public function fields() 
-    {
-    $fields = parent::fields();
-    // because of the json worning, unset for testing
-    unset($fields['image']);
 
-    return $fields;
-    }
-  */  
     public function attributeLabels()
     {
         return [
@@ -65,10 +55,16 @@ class AlbumImages extends \yii\db\ActiveRecord
                return $this->hasMany(ResizedPhotos::className(), ['image_id' => 'id']);
            }
 
+    public function extraFields()
+    {
+    return ['resizedPhotos'];
+    }
+
     public function behaviors()
     {
         return [
-            [
+              
+               [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
                     \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],

@@ -37,6 +37,9 @@ class ResizePhotoCommand extends Command
      *
      * @return int|null|void
      */
+
+
+    
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(array("","<info>Execute</info>",""));

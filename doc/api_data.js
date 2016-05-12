@@ -1,27 +1,120 @@
 define({ "api": [
   {
     "type": "post",
-    "url": "/albums",
-    "title": "Create new album",
-    "name": "Create_Album",
-    "group": "Albums",
-    "description": "<p>Creates a new album according users permissions. Administrator, Photographer and Client  can create album</p>",
+    "url": "/album-clients",
+    "title": "Sets client access for album",
+    "name": "Gives_access_to_the_Album",
+    "group": "Album_Clients",
+    "description": "<p>Gives access to the specific Album to the specific client Administrator, Photographer can give access</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "Json",
             "optional": false,
-            "field": "ID",
-            "description": "<p>Album ID</p>"
+            "field": "id",
+            "description": "<p>Id album, Id client like { &quot;album_id&quot; : 16, &quot;user_id : 40}</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 201 Created": [
+          {
+            "group": "Success 201 Created",
+            "type": "Json",
+            "optional": false,
+            "field": "Album",
+            "description": "<p>the Album like {key:value,}</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 201 Created\n Location:  http://127.0.0.1/interPhoto/web/albums/66\n    {\n\"album_id\": \"16\",\n\"user_id\": \"40\",\n \"id\": 3\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p><code>401</code> User needs to be autorized to action</p>"
           },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Forbidden",
+            "description": "<p><code>403</code> User's not allowed to action</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 Unauthorized\n{\n   \"name\":\"Unauthorized\",\n   \"message\":\"You are requesting with an invalid credential.\",\n   \"code\":0,\"status\":401,\"type\":\"yii\\\\web\\\\UnauthorizedHttpException\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "403 Forbidden\n{\n   \"name\": \"Forbidden\",\n   \"message\": \"You are not allowed to perform this action.\",\n   \"code\": 0,\n   \"status\": 403,\n   \"type\": \"yii\\\\web\\\\ForbiddenHttpException\"\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "./controllers/AlbumClientsController.php",
+    "groupTitle": "Album_Clients"
+  },
+  {
+    "type": "post",
+    "url": "/albums",
+    "title": "Create new album",
+    "name": "Create_Album",
+    "group": "Albums",
+    "description": "<p>Creates a new album according users permissions. Administrator, Photographer can create album</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
           {
             "group": "Parameter",
             "type": "Json",
             "optional": false,
             "field": "name",
             "description": "<p>Album name like { &quot;name&quot;: &quot;Animals&quot;}</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
           }
         ]
       }
@@ -54,6 +147,12 @@ define({ "api": [
             "optional": false,
             "field": "Unauthorized",
             "description": "<p><code>401</code> User needs to be autorized to action</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Forbidden",
+            "description": "<p><code>403</code> User's not allowed to action</p>"
           }
         ]
       },
@@ -62,11 +161,16 @@ define({ "api": [
           "title": "Error-Response:",
           "content": "401 Unauthorized\n{\n   \"name\":\"Unauthorized\",\n   \"message\":\"You are requesting with an invalid credential.\",\n   \"code\":0,\"status\":401,\"type\":\"yii\\\\web\\\\UnauthorizedHttpException\"\n}",
           "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "403 Forbidden\n{\n   \"name\": \"Forbidden\",\n   \"message\": \"You are not allowed to perform this action.\",\n   \"code\": 0,\n   \"status\": 403,\n   \"type\": \"yii\\\\web\\\\ForbiddenHttpException\"\n  }",
+          "type": "json"
         }
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Albums"
   },
   {
@@ -85,6 +189,19 @@ define({ "api": [
             "optional": false,
             "field": "ID",
             "description": "<p>Album ID</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
           }
         ]
       }
@@ -139,7 +256,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Albums"
   },
   {
@@ -148,7 +265,7 @@ define({ "api": [
     "title": "Index albums",
     "name": "Index_Albums",
     "group": "Albums",
-    "description": "<p>Returns the users' albums according users permissions. Administrator can get all albums. Photographer and client only their own (allowed) albums.</p>",
+    "description": "<p>Returns the users' albums according users permissions. Administrator can get all albums. Photographer and client only their own (allowed) albums. If photographer or client doesn't have any own or allowed albums index will be empty.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -157,6 +274,26 @@ define({ "api": [
             "optional": false,
             "field": "No",
             "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>name of the album for filtering like ?name=Wedding</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
           }
         ]
       }
@@ -201,7 +338,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Albums"
   },
   {
@@ -227,6 +364,19 @@ define({ "api": [
             "optional": false,
             "field": "name",
             "description": "<p>Album name like { &quot;name&quot;: &quot;Peoples&quot;}</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
           }
         ]
       }
@@ -282,7 +432,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Albums"
   },
   {
@@ -301,6 +451,19 @@ define({ "api": [
             "optional": false,
             "field": "ID",
             "description": "<p>Album ID</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
           }
         ]
       }
@@ -356,7 +519,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Albums"
   },
   {
@@ -435,7 +598,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AuthsController.php",
+    "filename": "./controllers/AuthsController.php",
     "groupTitle": "Auths"
   },
   {
@@ -543,7 +706,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AuthsController.php",
+    "filename": "./controllers/AuthsController.php",
     "groupTitle": "Auths"
   },
   {
@@ -624,7 +787,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AuthsController.php",
+    "filename": "./controllers/AuthsController.php",
     "groupTitle": "Auths"
   },
   {
@@ -698,7 +861,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AuthsController.php",
+    "filename": "./controllers/AuthsController.php",
     "groupTitle": "Auths"
   },
   {
@@ -767,45 +930,54 @@ define({ "api": [
       }
     },
     "version": "0.0.0",
-    "filename": "controllers/AuthsController.php",
+    "filename": "./controllers/AuthsController.php",
     "groupTitle": "Auths"
   },
   {
     "type": "post",
     "url": "/albums/id/images",
-    "title": "Create  image of the specific album",
+    "title": "Create  image in the specific album",
     "name": "Create_Image",
     "group": "Images",
-    "description": "<p>Creates image of the specific album  according users permissions. Administrator can create any image of any album. Photographer can create  image in their own albums.</p>",
+    "description": "<p>Creates image in the specific album  according users permissions. Administrator can create any image of any album. Photographer can create  image in their own albums. Client doesn't have permission to creat image.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "string",
+            "type": "file",
             "optional": false,
-            "field": "to",
-            "description": "<p>do</p>"
+            "field": "Image",
+            "description": "<p>File of image to upload jpg, png</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>multipart/form-data</p>"
           }
         ]
       }
     },
     "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "Image",
-            "description": "<p>the Image like {key:value,}</p>"
-          }
-        ]
-      },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n   {\n   to do\n    }",
+          "content": "HTTP/1.1 200 OK",
           "type": "json"
         }
       ]
@@ -841,45 +1013,64 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Images"
   },
   {
     "type": "delete",
     "url": "/albums/id/images/id",
-    "title": "Delete specific image of the specific album",
+    "title": "Delete specific image in the specific album",
     "name": "Delete_Image",
     "group": "Images",
-    "description": "<p>Returns the unique id image of the specific album  according users permissions. Administrator can view any image of any album. Photographer and client can view image only of  their own (allowed) albums.</p>",
+    "description": "<p>Delets the unique id image in the specific album  according users permissions. Administrator can delete any image of any album. Photographer can delete image only of  their own (allowed) albums.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "string",
+            "type": "number",
             "optional": false,
-            "field": "ID/images/ID",
-            "description": "<p>Album ID/images/ID image</p>"
+            "field": "ID_Album",
+            "description": "<p>ID album</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "ID_Image",
+            "description": "<p>ID image</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
           }
         ]
       }
     },
     "success": {
       "fields": {
-        "Success 200": [
+        "Success 204 No content": [
           {
-            "group": "Success 200",
-            "type": "Json",
+            "group": "Success 204 No content",
             "optional": false,
-            "field": "Image",
-            "description": "<p>the Image like {key:value,}</p>"
+            "field": "Empty",
+            "description": ""
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n   {\n   to do\n    }",
+          "content": "HTTP/1.1 204 No content",
           "type": "json"
         }
       ]
@@ -915,7 +1106,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Images"
   },
   {
@@ -930,9 +1121,30 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "number",
             "optional": false,
-            "field": "No",
-            "description": ""
+            "field": "ID",
+            "description": "<p>Album ID album</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "Status",
+            "description": "<p>You can check of the resizing image state. Just type ?status-=complete ot status=new. The status=complete means that images was resized</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
           }
         ]
       }
@@ -952,7 +1164,12 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n   {\n   to do\n    }",
+          "content": "    HTTP/1.1 200 OK\n      [\n{\n  \"id\": 11,\n  \"album_id\": 16,\n  \"image\": \"users_cache.png\",\n  \"created_at\": 1462993051\n},\n{\n  \"id\": 15,\n  \"album_id\": 16,\n  \"image\": \"users_cache.png\",\n  \"created_at\": 1462994046\n},",
+          "type": "json"
+        },
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK     ]\n[\n{\n  \"image\": \"users_cache.png\",\n  \"id\": \"11\",\n  \"status\": \"complete\"\n},\n{\n  \"image\": \"users_cache.png\",\n  \"id\": \"15\",\n  \"status\": \"complete\"\n},\n{\n  \"image\": \"users_cache.png\",\n  \"id\": \"16\",\n  \"status\": \"complete\"\n}\n]",
           "type": "json"
         }
       ]
@@ -988,88 +1205,30 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Images"
   },
   {
     "type": "put",
     "url": "/albums/id/images/id",
-    "title": "Update specific image of the specific album",
+    "title": "Update image",
+    "description": "<p>Action is not allowed. To update photo you should delete the photo  and create new one.</p>",
     "name": "Update_Image",
     "group": "Images",
-    "description": "<p>Update the unique id image of the specific album  according users permissions. Administrator can update any image of any album. Photographer and client can update image only of  their own (allowed) albums.</p>",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "number",
-            "optional": false,
-            "field": "ID",
-            "description": "<p>Image</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "Image",
-            "description": "<p>to do</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Json",
-            "optional": false,
-            "field": "Image",
-            "description": "<p>the Image like {key:value,}</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n   {\n   to do\n    }",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "fields": {
         "Error 4xx": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "Unauthorized",
-            "description": "<p><code>401</code> User needs to be autorized to action</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Forbidden",
-            "description": "<p><code>403</code> User's not allowed to action</p>"
+            "field": "Not_allowed",
+            "description": "<p><code>405</code> Method is not allowed</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "401 Unauthorized\n{\n   \"name\":\"Unauthorized\",\n   \"message\":\"You are requesting with an invalid credential.\",\n   \"code\":0,\"status\":401,\"type\":\"yii\\\\web\\\\UnauthorizedHttpException\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "403 Forbidden\n{\n   \"name\": \"Forbidden\",\n   \"message\": \"You are not allowed to perform this action.\",\n   \"code\": 0,\n   \"status\": 403,\n   \"type\": \"yii\\\\web\\\\ForbiddenHttpException\"\n  }",
-          "type": "json"
-        }
-      ]
+      }
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Images"
   },
   {
@@ -1078,7 +1237,7 @@ define({ "api": [
     "title": "View specific image of the specific album",
     "name": "View_Image",
     "group": "Images",
-    "description": "<p>Returns the unique id image of the specific album  according users permissions. Administrator can view any image of any album. Photographer and client can view image only of  their own (allowed) albums.</p>",
+    "description": "<p>Returns the unique id image of the specific album  according users permissions. Administrator can view any image of any album. Photographer and client can view image only of their own (allowed) albums. Photographer gives access  to his own albums  to the client.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1086,8 +1245,28 @@ define({ "api": [
             "group": "Parameter",
             "type": "number",
             "optional": false,
-            "field": "ID",
-            "description": "<p>Image ID image</p>"
+            "field": "ID_Album",
+            "description": "<p>Album ID album</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "ID_Image",
+            "description": "<p>ID image</p>"
+          }
+        ]
+      }
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users unique access-token like Bearer .....</p>"
           }
         ]
       }
@@ -1101,13 +1280,20 @@ define({ "api": [
             "optional": false,
             "field": "Image",
             "description": "<p>the Image like {key:value,}</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "ResizedImages",
+            "description": "<p>the Resized Images like {key:value,}</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n   {\n   to do\n    }",
+          "content": "HTTP/1.1 200 OK\n{\n    \"Image\": {\n    \"id\": 11,\n    \"album_id\": 16,\n    \"image\": \"users_cache.png\",\n    \"created_at\": 1462993051\n},\n   \"Resized Images\": [\n[\n{\n  \"status\": \"complete\",\n  \"image_id\": 11,\n  \"id\": 21,\n  \"size\": \"100\",\n  \"origin\": \"users_cache.png\",\n  \"comment\": null\n},\n{\n  \"status\": \"complete\",\n  \"image_id\": 11,\n  \"id\": 22,\n  \"size\": \"400\",\n  \"origin\": \"users_cache.png\",\n  \"comment\": null\n} \n ]]\n }",
           "type": "json"
         }
       ]
@@ -1143,7 +1329,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/AlbumsController.php",
+    "filename": "./controllers/AlbumsController.php",
     "groupTitle": "Images"
   },
   {
@@ -1202,7 +1388,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 Created\nLocation:  http://127.0.0.1/interPhoto/web/albums/66\n   {\nto do\n    }",
+          "content": "  HTTP/1.1 201 Created\n{\n \"name\": \"mmmm\",\n \"email\": \"s@s.v\",\n \"role\": \"admin\",\n \"id\": 103\n  }",
           "type": "json"
         }
       ]
@@ -1215,6 +1401,12 @@ define({ "api": [
             "optional": false,
             "field": "Unauthorized",
             "description": "<p><code>401</code> User needs to be autorized to action</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Forbidden",
+            "description": "<p><code>403</code> User's not allowed to action</p>"
           }
         ]
       },
@@ -1232,7 +1424,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/UsersController.php",
+    "filename": "./controllers/UsersController.php",
     "groupTitle": "Users"
   },
   {
@@ -1305,7 +1497,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/UsersController.php",
+    "filename": "./controllers/UsersController.php",
     "groupTitle": "Users"
   },
   {
@@ -1314,7 +1506,7 @@ define({ "api": [
     "title": "Index users",
     "name": "Index_Users",
     "group": "Users",
-    "description": "<p>Returns the list of the users according users permissions. Administrator can get all users. Photographer and client can index only own information</p>",
+    "description": "<p>Returns the list of the users according users permissions. Administrator can get all users. Photographer and client can index only own information.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1342,7 +1534,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n   {\n     to do \n    },\n     {\n      .......\n     }\n   ]",
+          "content": "    HTTP/1.1 200 OK\n    [\n{\n  \"id\": 37,\n  \"role\": \"admin\",\n  \"name\": \"mmm\",\n  \"email\": \"travers.nk@gmail.com\",\n  \"phone\": \"10000\",\n  \"modified_at\": \"2016-05-10 15:40:54\",\n  \"created_at\": \"2016-04-18 16:12:09\"\n},\n{\n  \"id\": 39,\n  \"role\": \"photographer\",\n  \"name\": \"photo\",\n  \"email\": \"photo@gmail.com\",\n  \"phone\": \"000-000-00-00\",\n  \"modified_at\": \"2016-05-10 15:40:49\",\n  \"created_at\": \"2016-04-18 16:14:17\"\n},",
           "type": "json"
         }
       ]
@@ -1367,7 +1559,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/UsersController.php",
+    "filename": "./controllers/UsersController.php",
     "groupTitle": "Users"
   },
   {
@@ -1392,7 +1584,7 @@ define({ "api": [
             "type": "Json",
             "optional": false,
             "field": "name",
-            "description": "<p>User name like { &quot;name&quot;: &quot;Anna&quot;} add other fields</p>"
+            "description": "<p>User name like { &quot;name&quot;: &quot;Anna&quot;} add other fields, excluding email and role, email and  is nor allowed to change</p>"
           }
         ]
       }
@@ -1412,7 +1604,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n   {\n     to do\n    }",
+          "content": "    HTTP/1.1 200 OK\n       {\n    {\n\"id\": 37,\n\"role\": \"admin\",\n\"name\": \"mmmm\",\n\"email\": \"travers.nk@gmail.com\",\n\"phone\": \"10000\",\n\"modified_at\": \"2016-05-10 15:40:54\",\n\"created_at\": \"2016-04-18 16:12:09\"\n   }\n        }",
           "type": "json"
         }
       ]
@@ -1448,7 +1640,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/UsersController.php",
+    "filename": "./controllers/UsersController.php",
     "groupTitle": "Users"
   },
   {
@@ -1486,7 +1678,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n   {\n     to do \n    }",
+          "content": "    HTTP/1.1 200 OK\n     {\n \"id\": 37,\n\"role\": \"admin\",\n\"name\": \"mmm\",\n\"email\": \"travers.nk@gmail.com\",\n\"phone\": \"10000\",\n\"modified_at\": \"2016-05-10 15:40:54\",\n\"created_at\": \"2016-04-18 16:12:09\"\n      }",
           "type": "json"
         }
       ]
@@ -1522,7 +1714,35 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "controllers/UsersController.php",
+    "filename": "./controllers/UsersController.php",
     "groupTitle": "Users"
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "_var_www_interPhoto_doc_main_js",
+    "groupTitle": "_var_www_interPhoto_doc_main_js",
+    "name": ""
   }
 ] });

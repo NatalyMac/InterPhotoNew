@@ -1,12 +1,12 @@
 <?php
 use ApiGuyTester;
-//use \app\models\User;
+
 
 
 class UserPhotoClientCest
 {
-    public $photoToken = 'Dc_O1Jx27JlD2QQek6YQtTa_-rCodCfz';
-    public $clientToken = 'sWQZwvyXHXAu9MFQf4z8Q16y5B8GM3s8';
+    public $photoToken = '3fEwuRzczeguZNny4T9Z2LG_1feu0S-A';
+    public $clientToken = 'kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2';
     // public $appConfig = '@tests/api/_config.php';
     public function _before(ApiGuyTester $I)
     {

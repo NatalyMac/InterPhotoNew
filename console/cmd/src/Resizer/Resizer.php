@@ -70,7 +70,7 @@ class Resizer
     
     public function updateImages($conn, $status, $message, $imagepath, $id, $size)
     {
-        $sql = "UPDATE resized_photos SET status='".$status."', size=$size, origin='".$imagepath."' WHERE id = ".$id;
+        $sql = "UPDATE resized_photos SET status=\"$status\", size=$size, origin=\"$imagepath\" WHERE id = $id";        
         $query = $conn->prepare($sql);
         $query->execute();
         echo $message."\n";
@@ -79,7 +79,7 @@ class Resizer
     
     public function changeStatus($conn, $statusNew, $statusOld)
     {
-        $sql = "UPDATE resized_photos SET status = '".$statusNew."' WHERE status = '".$statusOld."'";
+        $sql = "UPDATE resized_photos SET status = \"$statusNew\" WHERE status = \"$statusOld\"";
         $query = $conn->prepare($sql);
         $query->execute();
     }

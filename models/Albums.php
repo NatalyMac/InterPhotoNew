@@ -7,7 +7,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\behaviors\BlameableBehavior;
 use \app\models\AlbumClients;
-
+use yii\behaviors\TimestampBehavior;
 
 class Albums extends \yii\db\ActiveRecord
 {
@@ -65,17 +65,18 @@ class Albums extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
     
-    public function behaviors()
+
+public function behaviors()
     {
-        $behaviors = parent::behaviors();
-        $behaviors ['createdBy'] = 
+        return [
             [
-                'class' => BlameableBehavior::className(),
-                'createdByAttribute' => $this->user_id,
-                'updatedByAttribute' => $this->user_id,
-                
-            ];
-        return $behaviors;
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                     \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                     \yii\db\ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
+        ];
     }
 
     public static function getClientAlbums($idUser)
@@ -99,18 +100,17 @@ class Albums extends \yii\db\ActiveRecord
             return $clientAlbums;
     }
 
-    public static function getClientAlbum($id, $idUser)
+    public static function getAlbumAllow($id, $userId)
     {
         $album = null;
         $album = AlbumClients::find()
               -> where ([
-                'user_id' => $idUser,
+                'user_id' => $userId,
                 'album_id' =>$id,
                 ])
               ->all();
             return $album;
     }
-
 
 }
 

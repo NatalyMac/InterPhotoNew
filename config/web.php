@@ -8,7 +8,7 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
-       /*
+       
        [
         'class' => 'yii\filters\ContentNegotiator',
             'formats' => 
@@ -17,7 +17,7 @@ $config = [
             'application/xml' => Response::FORMAT_XML,
             ],
         ],
-        */
+        
         'log',
         ],
 
@@ -95,7 +95,7 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
         
         'urlManager' => [
-          //  'enablePrettyUrl' => true,
+            'enablePrettyUrl' => true,
             'cache' => false,
             'showScriptName' => false,
             'rules' => 
@@ -133,7 +133,8 @@ $config = [
                 'extraPatterns' => 
                     ['GET <id:\d+>/images'                   => 'index-images',
                      'GET <id:\d+>/images/<image_id:\d+>'    => 'view-images',
-                     'PUT <id:\d+>/images/<image_id:\d+>'    => 'update-images',
+                     'PUT <id:\d+>/images/<image_id:\d+>'    =>  'update-images',
+                     'PUT <id:\d+>/images'                   =>  'update-images',
                      'POST <id:\d+>/images'                  => 'create-images',
                      'DELETE <id:\d+>/images/<image_id:\d+>' => 'delete-images',
                      '<id:\d+>/images/<image_id:\d+>'        => 'options-images',

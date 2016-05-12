@@ -8,14 +8,16 @@ use app\controllers\auth\RbacController;
 use app\models\auth\AuthItem;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
+//use yii\filters\VerbFilter;
+use yii\behaviors\TimestampBehavior;
+
 
 class Users extends \yii\db\ActiveRecord implements IdentityInterface
 {
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_REGISTER = 'register';
     const SCENARIO_ASKRESET = 'askreset';
-
+    const SCENARIO_UPDATE = 'update';
     public static function tableName()
     {
         return 'users';
@@ -25,8 +27,10 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['role', 'name', 'email', 'password'], 'required'],
-            [['email'], 'unique', 'on' => 'register'],
+            [['email'], 'unique', 'on' => ['register']],
+            //[['email'], 'unique', 'on' => 'update'],
             [['role'], 'string'],
+            [['role'], 'in', 'range' => ['admin', 'photographer', 'client']],
             [['modified_at', 'created_at'], 'safe'],
             //[['access_token'], 'string', 'max' => 100],
             [['password'], 'string', 'max' => 255], 
@@ -43,6 +47,7 @@ public function scenarios()
         $scenarios[self::SCENARIO_LOGIN] =    ['email', 'password'];
         $scenarios[self::SCENARIO_REGISTER] = ['email', 'password', 'name', 'role', ];
         $scenarios[self::SCENARIO_ASKRESET] = ['email'];
+        $scenarios[self::SCENARIO_UPDATE] =   ['password', 'name'];
         return $scenarios;
     }
 
@@ -75,6 +80,18 @@ public function extraFields()
         ];
     }
 
+public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                     \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                     \yii\db\ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
+        ];
+    }
     
     public function getAlbumClients()
     {
@@ -107,15 +124,10 @@ public function extraFields()
     }
 
     // helpers !!!!!!
-    public function setPassword($password)
-    {
-      return $this->password = Yii::$app->getSecurity()->generatePasswordHash($password);
-    
-        //return $this->password = $password;
-    }
 
-    public function validatePassword($password)
+   public function validatePassword($password)
     {
+
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
 //hash
     }
@@ -131,14 +143,15 @@ public function extraFields()
  
     public function validateUser($email, $password)
     {   
+
         $authUser = static::findByEmail($email);
-        if ($authUser!=null and $password!=null) 
+        if ($authUser!== null and $password !== null) 
         {
-                if (!$authUser->validatePassword($password))  
-                    return false;
         
-                    
-            $authUser->generateAccessToken();
+            if (!$authUser->validatePassword($password))  
+                false;
+        
+                $authUser->generateAccessToken();
                 return $authUser;
         }          
     }
@@ -201,14 +214,14 @@ public function extraFields()
         {
             if ($this->isNewRecord) 
             {
-                $this->setPassword($this->password);
+                $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
             }
             
-            if ($this->isAttributeChanged('password'))
+            if (!($this->isnewRecord) and $this->isAttributeChanged('password'))
             {
-                $this->setPassword($this->password);   
+                $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
             }
-                return true;
+               return true;
 
         } else {
            return false;

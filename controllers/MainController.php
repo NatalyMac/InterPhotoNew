@@ -19,7 +19,6 @@ class MainController extends ActiveController
     public $modelClass          = null;
     public $modelName           = null;
     public $searchModelClass    = null;
-    //public $searchModelName     = null;
     public $linkedModelName     = null ;
     // $allowId is indicator to restrict index data by current user or alloewd items if it is requared by autorization rules 
     // available values 'id', 'user_id', 'albums'
@@ -131,7 +130,7 @@ class MainController extends ActiveController
                             return true;
                     }
                 ],
-                
+               
                 [
                     'actions' => ['update-'.strtolower($this->linkedModelName)],
                     'allow' => true,
@@ -141,12 +140,13 @@ class MainController extends ActiveController
                             return true;
                     }
                 ],
+                
                 [
                     'actions' => ['delete-'.strtolower($this->linkedModelName)],
                     'allow' => true,
                     'matchCallback' => function ($rule, $action)
                     { 
-                        if(\Yii::$app->user->can('delete'.$this->linkedModelNmae))
+                        if(\Yii::$app->user->can('delete'.$this->linkedModelName))
                             return true;
                     }
                 ],
@@ -186,7 +186,7 @@ class MainController extends ActiveController
                     
                     $filter[$key] = $value;
                 }
-            } 
+            }
             return $filter;
     }
 }

@@ -4,7 +4,7 @@ use ApiGuyTester;
 
 class AlbumAdminCest
 {
-    public $adminToken = 'fqW1LZJqIP9XsvsasiSIdCxCNrPKB_hC';
+    public $adminToken = '8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0';
    
     public function _before(ApiGuyTester $I)
     {

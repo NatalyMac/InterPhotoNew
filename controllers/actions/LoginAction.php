@@ -13,7 +13,7 @@ class LoginAction extends \yii\rest\Action
 {
  
     public $typeAuth = 'Bearer ';
-    public $loginScenario =  Users::SCENARIO_LOGIN;
+    public $loginScenario = Users::SCENARIO_LOGIN;
 
     public function run()
     {   
@@ -22,16 +22,17 @@ class LoginAction extends \yii\rest\Action
         $authModel = new $this->modelClass;
         $authModel->scenario = $this->loginScenario;
         $authModel->attributes = $params;
-        
+   
         if (!$authModel->validate()) 
             throw new BadRequestHttpException('Email or(and) password is(are) empty', 400);
 
         if (!($authUser = $authModel->validateUser($params['email'],  $params['password'])))
-               throw new NotFoundHttpException('User was not found, check the email or password', 404);
+            throw new NotFoundHttpException('User was not found, check the email or password', 404);
         
         // set autorization token in the header
         $this->setAutorizationHeader($authUser);
-            return true;
+           return true;
+        $authModel->validateUser($params['email'],  $params['password']);
     }
     
     public function setAutorizationHeader($authUser)

@@ -7,14 +7,9 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\AlbumImages;
 
-/**
- * AlbumImagesSearch represents the model behind the search form about `app\models\AlbumImages`.
- */
+
 class AlbumImagesSearch extends AlbumImages
 {
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -23,49 +18,75 @@ class AlbumImagesSearch extends AlbumImages
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
-        $query = AlbumImages::find();
+        $queryImage = AlbumImages::find();
 
-        // add conditions that should always apply here
+        $dataProviderIndex = new ActiveDataProvider([
+            'query' => $queryImage,]);
+        
+        $this->attributes = $params;
+        
+        if (!$this->validate()) 
+            {
+                $query->where('0=1');
+                    return $dataProvider;
+            }
+        if ($params['status'] == null)
+        {
+            $queryImage->andFilterWhere([
+                //'id' => $this->id,
+                'album_id' => $this->id,
+                'created_at' => $this->created_at,
+                ]);
+            $queryImage->andFilterWhere([
+                'like', 'image', $this->image]);
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
+            return $dataProviderIndex;
         }
+        
+        if (([$params['status']] !== null)) 
+            $status=$params['status'];
+            /*
+            {
+                $this->status = $params['status'];
+                $queryImage = \app\models\AlbumImages::find()
+                   // ->with(['resizedPhotos'])
+                    ->with(['resizedPhotos' => function($q) {
+                                                       // $q->andWhere(['status' =>"new"]);}
+                                $q->andWhere(['status' => $this->status]);
+                                $q->select(['image_id', 'status']);}
+                           ])
+                    ->asArray();
+                $dataProviderStatusIndex = new ActiveDataProvider(['query' => $queryImage]);
+                   return $dataProviderStatusIndex;
+            }
+           */
+            {
+               /* $sql = "SELECT DISTINCT album_images.image, album_images.id, resized_photos.status 
+                                   FROM album_images, resized_photos 
+                                   WHERE album_images.id = resized_photos.image_id 
+                                   AND resized_photos.status = '".$status."'";
+                if (!mysql_real_escape_string($sql))
+                    return false;*/
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'album_id' => $this->album_id,
-            'created_at' => $this->created_at,
-        ]);
-
-        $query->andFilterWhere(['like', 'image', $this->image]);
-
-        return $dataProvider;
+                $queryImage = AlbumImages::findBySql
+                                 ("SELECT DISTINCT album_images.image, album_images.id, resized_photos.status 
+                                   FROM album_images, resized_photos 
+                                   WHERE album_images.id = resized_photos.image_id 
+                                   AND resized_photos.status = '".$status."'")
+                            ->asArray();
+               
+                $dataProviderStatusIndex = new ActiveDataProvider(['query' => $queryImage]);
+                    return $dataProviderStatusIndex;
+            }
     }
+
+
 }

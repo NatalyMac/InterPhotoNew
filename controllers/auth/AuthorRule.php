@@ -34,6 +34,7 @@ class AuthorRule extends Rule
         
         \Yii::$app->controller->allowId = 'user_id';
             return $modelAsk->user_id == \Yii::$app->user->identity->id;
+        
     }
     
 }

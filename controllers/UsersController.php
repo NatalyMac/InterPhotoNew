@@ -17,8 +17,7 @@ class UsersController extends MainController
     public $modelName        = 'Users';
     public $searchModelClass = '\app\models\UsersSearch';
     public $registerScenario =  Users::SCENARIO_REGISTER;
-    //public $searchModelName  = 'UsersSearch';
-    
+    public $updateScenario   =  Users::SCENARIO_UPDATE;
     
 /**
  * @api {get} /users Index users
@@ -26,7 +25,7 @@ class UsersController extends MainController
  * @apiGroup Users
  *
  * @apiDescription Returns the list of the users according users permissions.
- * Administrator can get all users. Photographer and client can index only own information
+ * Administrator can get all users. Photographer and client can index only own information.
  * 
  * @apiParam No
  *
@@ -35,13 +34,24 @@ class UsersController extends MainController
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     [
- *        {
- *          to do 
- *         },
- *          {
- *           .......
- *          }
- *        ]
+ * {
+ *   "id": 37,
+ *   "role": "admin",
+ *   "name": "mmm",
+ *   "email": "travers.nk@gmail.com",
+ *   "phone": "10000",
+ *   "modified_at": "2016-05-10 15:40:54",
+ *   "created_at": "2016-04-18 16:12:09"
+ * },
+ * {
+ *   "id": 39,
+ *   "role": "photographer",
+ *   "name": "photo",
+ *   "email": "photo@gmail.com",
+ *   "phone": "000-000-00-00",
+ *   "modified_at": "2016-05-10 15:40:49",
+ *   "created_at": "2016-04-18 16:14:17"
+ * },
  *
  * @apiError Unauthorized <code>401</code> User needs to be autorized to action
  *
@@ -73,9 +83,15 @@ class UsersController extends MainController
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *        {
- *          to do 
- *         }
+ *      {
+ *  "id": 37,
+ * "role": "admin",
+ * "name": "mmm",
+ * "email": "travers.nk@gmail.com",
+ * "phone": "10000",
+ * "modified_at": "2016-05-10 15:40:54",
+ * "created_at": "2016-04-18 16:12:09"
+ *       }
  *
  * @apiError Unauthorized <code>401</code> User needs to be autorized to action
  *
@@ -115,7 +131,7 @@ class UsersController extends MainController
  * Photographer and client only their own user information.
  * 
  * @apiParam {Number} ID User ID
- * @apiParam {Json} name User name like { "name": "Anna"} add other fields
+ * @apiParam {Json} name User name like { "name": "Anna"} add other fields, excluding email and role, email and  is nor allowed to change
  * 
  *
  * @apiSuccess {Json} User the User like {key:value,}
@@ -123,7 +139,15 @@ class UsersController extends MainController
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *        {
- *          to do
+ *     {
+ * "id": 37,
+ * "role": "admin",
+ * "name": "mmmm",
+ * "email": "travers.nk@gmail.com",
+ * "phone": "10000",
+ * "modified_at": "2016-05-10 15:40:54",
+ * "created_at": "2016-04-18 16:12:09"
+ *    }
  *         }
  *
  * @apiError Unauthorized <code>401</code> User needs to be autorized to action
@@ -170,10 +194,12 @@ class UsersController extends MainController
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 201 Created
- *     Location:  http://127.0.0.1/interPhoto/web/albums/66
- *        {
-    to do
- *         }
+ *   {
+ *    "name": "mmmm",
+ *    "email": "s@s.v",
+ *    "role": "admin",
+ *    "id": 103
+ *     }
  *
  * @apiError Unauthorized <code>401</code> User needs to be autorized to action
  *
@@ -184,7 +210,8 @@ class UsersController extends MainController
  *        "message":"You are requesting with an invalid credential.",
  *        "code":0,"status":401,"type":"yii\\web\\UnauthorizedHttpException"
  *     }
- * 
+ *
+ * @apiError Forbidden <code>403</code> User's not allowed to action
  * @apiErrorExample Error-Response:
  *     403 Forbidden
  *     {
@@ -195,11 +222,6 @@ class UsersController extends MainController
  *        "type": "yii\\web\\ForbiddenHttpException"
  *       }
  */
-    //public function actionCreate()
-    //{
-        
-      //  return parent::actionCreate();
-    //}
 
 public function actions() 
     {   
@@ -210,15 +232,16 @@ public function actions()
             'modelClass' => $this->modelClass,
             'scenario' => $this->registerScenario,
             ];
-
-          //$actions['update'] = [
-            //'class' => 'yii\rest\CreateAction',
-            //'modelClass' => $this->modelClass,
-            //'scenario' => $this->registerScenario,
-            //];
-
+        $actions['update'] = [
+            'class' => 'yii\rest\UpdateAction',
+            'modelClass' => $this->modelClass,
+            'scenario' => $this->updateScenario,
+            ];
         return $actions;
     }      
+// для апдейта нужно вводить два сценария, админ и юзер, в одном разрешать смену роли и email, в другом запретить
+// сейчас смена email и роли запрещена сценарием update
+
 
 
 /**

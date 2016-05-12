@@ -3,16 +3,10 @@ namespace app\controllers\actions;
 
 
 use Yii;
-use yii\web\ServerErrorHttpException;
 use yii\rest\Action;
-use yii\web\UnprocessableEntityHttpException;
-use yii\validators\EmailValidator;
-use app\models\ResetPass;
-use yii\swiftmailer\Mailer;
-use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 use app\models\UploadForm;
-use yii\web\UploadedFile;
 use app\models\AlbumImages;
 use app\models\ResizedPhotos;
 
@@ -41,17 +35,14 @@ class CreateImageAction extends \yii\rest\Action
         if ($model->validate())
         {
             if (!move_uploaded_file($tmpName, $this->uploadDir.$model->name))
-                ServerErrorHttpException('Failed to action for unknown reason.');
+                throw new ServerErrorHttpException('Failed to action for unknown reason.');
           
             $params = \Yii::$app->request->getQueryParams();
             $albumImage = new AlbumImages();
             $albumImage->image = $model->name;
-            
-            $resizedPhoto100 = new ResizedPhotos(['status'=>'new']);
-            $resizedPhoto400 = new ResizedPhotos(['status' =>'new']);
     
-            $albumImage->resized[] =  $resizedPhoto100;
-            $albumImage->resized[] =  $resizedPhoto400;
+            $albumImage->resized[] =  new ResizedPhotos(['status'=>'new']);
+            $albumImage->resized[] =  new ResizedPhotos(['status' =>'new']);
                 
             if (!$albumImage->save()) 
               throw new ServerErrorHttpException('Failed to action for unknown reason.');

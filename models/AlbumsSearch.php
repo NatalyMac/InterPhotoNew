@@ -40,9 +40,11 @@ class AlbumsSearch extends Albums
                 $cache->set($key, $query);
             }
         
+
+       
         $dataProvider = new ActiveDataProvider(['query' => $query,]);
         $this->attributes = $params;
-        
+      
         if (!$this->validate())
             {
                 $query->where('0=1'); 
@@ -62,12 +64,20 @@ class AlbumsSearch extends Albums
         $query->andFilterWhere(['like', 'name', $this->name]);
         
         if (array_key_exists('albums', $params))
+        {
             $albums = $this -> getClientAlbums($id);
-        if (isset($albums) and count($albums !== 0))
+    
+        }
+       
+        if (isset($albums) and count($albums) !== 0)
             $query->andFilterWhere(['in', 'id', $albums]);
-        if (isset($albums) and count($albums == 0))
-            $query->where('0=1');
-            
+    
+       
+        if (isset($albums) and count($albums) === 0)
+        {
+      
+           $query->where('0=1');
+         }   
             return $dataProvider;
             
     }

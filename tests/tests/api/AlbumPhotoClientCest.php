@@ -4,8 +4,9 @@ use ApiGuyTester;
 
 class AlbumPhotoClientCest
 {
-   public $photoToken = 'Dc_O1Jx27JlD2QQek6YQtTa_-rCodCfz';
-   public $clientToken = 'sWQZwvyXHXAu9MFQf4z8Q16y5B8GM3s8';
+   public $photoToken = '3fEwuRzczeguZNny4T9Z2LG_1feu0S-A';
+   public $clientToken = 'kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2';
+   public $clientAlbum = 78;
    // wedding
     public function _before(ApiGuyTester $I)
     {
@@ -94,7 +95,7 @@ class AlbumPhotoClientCest
     public function tryToTestViewClient(ApiGuyTester $I, $scenario)
     {
        
-       $id = $I->grabFromDatabase('albums', 'id', ['name' => 'Holiday']);
+       $id = $this->clientAlbum;
 
        $I->wantTo('view the album via API I am client');
        
