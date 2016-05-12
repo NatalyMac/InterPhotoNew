@@ -73,18 +73,16 @@ class AlbumImages extends \yii\db\ActiveRecord
         ];
     }
     
-
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) 
-        {
+        { 
             if (Albums::findOne($this->album_id))
                 return true;
         } else {
-           return false;
+            return false;
         }   
     }
-
 
     public function afterSave($insert, $changedAttributes)
     {

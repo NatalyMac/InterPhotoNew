@@ -947,8 +947,8 @@
             "group": "Parameter",
             "type": "file",
             "optional": false,
-            "field": "Image",
-            "description": "<p>File of image to upload jpg, png</p>"
+            "field": "UploadForm[imageFile]",
+            "description": "<p>File of image to upload jpg, png. Key of uploding must be UploadForm[imageFile].</p>"
           }
         ]
       }
@@ -996,6 +996,12 @@
             "optional": false,
             "field": "Forbidden",
             "description": "<p><code>403</code> User's not allowed to action</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Internal",
+            "description": "<p>Server Error <code>500 Probably album id is not correct or doesn't exist</p>"
           }
         ]
       },
@@ -1008,6 +1014,11 @@
         {
           "title": "Error-Response:",
           "content": "403 Forbidden\n{\n   \"name\": \"Forbidden\",\n   \"message\": \"You are not allowed to perform this action.\",\n   \"code\": 0,\n   \"status\": 403,\n   \"type\": \"yii\\\\web\\\\ForbiddenHttpException\"\n  }",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "\"name\": \"Internal Server Error\",\n\"message\": \"Failed to action for unknown reason. Check the id album\",\n\"code\": 0,\n\"status\": 500,\n\"type\": \"yii\\\\web\\\\ServerErrorHttpException\"",
           "type": "json"
         }
       ]

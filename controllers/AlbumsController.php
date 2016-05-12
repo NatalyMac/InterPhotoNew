@@ -375,7 +375,7 @@ class AlbumsController extends MainController
  * Administrator can create any image of any album.
  * Photographer can create  image in their own albums. Client doesn't have permission to creat image.
  * 
- * @apiParam {file} Image File of image to upload jpg, png 
+ * @apiParam {file} UploadForm[imageFile] File of image to upload jpg, png. Key of uploding must be UploadForm[imageFile].
  * @apiHeader {String} Authorization Users unique access-token like Bearer .....  
  * @apiHeader {String} Content-Type    multipart/form-data 
  *
@@ -402,6 +402,16 @@ class AlbumsController extends MainController
  *        "status": 403,
  *        "type": "yii\\web\\ForbiddenHttpException"
  *       }
+ *
+ * @apiError Internal Server Error <code>500 Probably album id is not correct or doesn't exist
+ *
+ * @apiErrorExample Error-Response:
+ * "name": "Internal Server Error",
+ * "message": "Failed to action for unknown reason. Check the id album",
+ * "code": 0,
+ * "status": 500,
+ * "type": "yii\\web\\ServerErrorHttpException"
+ *    
  */
         $actions['create-images'] = [
             'class'=> 'app\controllers\actions\CreateImageAction',
