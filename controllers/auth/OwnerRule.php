@@ -17,23 +17,21 @@ class OwnerRule extends Rule
      */
     public function execute($user, $item, $params)
     {
-    
 
-      if (isset($params['model'])) $model = $params['model'];
-        
-        if (!\Yii::$app->request->getQueryParam('id'))
-            {
-              \Yii::$app->controller->allowId = 'id';
-              return true;
-            } 
-        
+
+        if (isset($params['model'])) $model = $params['model'];
+
+        if (!\Yii::$app->request->getQueryParam('id')) {
+            \Yii::$app->controller->allowId = 'id';
+            return true;
+        }
+
         $id = \Yii::$app->request->getQueryParam('id');
 
         $model = new \Yii::$app->controller->modelClass;
 
-        if (!$modelAsk = $model->findOne($id)) 
+        if (!$modelAsk = $model->findOne($id))
             throw new NotFoundHttpException('Object not found', 404);
-      
-            return $id == \Yii::$app->user->identity->id;
-  }
+        return $id == \Yii::$app->user->identity->id;
+    }
 }

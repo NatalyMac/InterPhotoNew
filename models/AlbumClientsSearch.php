@@ -5,7 +5,6 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\AlbumClients;
 
 /**
  * AlbumClientsSearch represents the model behind the search form about `app\models\AlbumClients`.
@@ -42,9 +41,6 @@ class AlbumClientsSearch extends AlbumClients
     public function search($params)
     {
         $query = AlbumClients::find();
-
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -53,7 +49,7 @@ class AlbumClientsSearch extends AlbumClients
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-             $query->where('0=1');
+            $query->where('0=1');
             return $dataProvider;
         }
 
@@ -67,25 +63,18 @@ class AlbumClientsSearch extends AlbumClients
 
         $query->andFilterWhere(['like', 'access', $this->access]);
 
-        $id =  \Yii::$app->user->identity->id;
-        
+        $id = \Yii::$app->user->identity->id;
+
         if (array_key_exists('albums', $params))
-        {
-            $albums = $this -> getPhotographerAlbums($id);
-            
-        }
-       
+            $albums = $this->getPhotographerAlbums($id);
+
         if (isset($albums) and count($albums) !== 0)
             $query->andFilterWhere(['in', 'album_id', $albums]);
-    
-       
-        if (isset($albums) and count($albums) === 0)
-        {
-      
-           $query->where('0=1');
-         }   
-            return $dataProvider;
-            
+
+        if (isset($albums) and count($albums) === 0) 
+            $query->where('0=1');
+        return $dataProvider;
+
     }
 }
 

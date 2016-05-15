@@ -21,16 +21,15 @@ class AllowRule extends Rule
     {
 
         if (isset($params['model'])) $model = $params['model'];
-        $model = \Yii::$app->controller->modelClass;  
+        $model = \Yii::$app->controller->modelClass;
 
-        $userId =  \Yii::$app->user->identity->id;  
+        $userId = \Yii::$app->user->identity->id;
 
-        if (!\Yii::$app->request->getQueryParam('id')) 
-            {
-              
-                \Yii::$app->controller->allowId = 'albums';
-                    return true;
-            } 
+        if (!\Yii::$app->request->getQueryParam('id')) {
+
+            \Yii::$app->controller->allowId = 'albums';
+            return true;
+        }
 
         $model = new \Yii::$app->controller->modelClass;
         $id = \Yii::$app->request->getQueryParam('id');
@@ -38,9 +37,9 @@ class AllowRule extends Rule
         if (!$modelAsk = $model->findOne($id))
             throw new NotFoundHttpException('Object not found', 404);
 
-        $userId =  \Yii::$app->user->identity->id;
+        $userId = \Yii::$app->user->identity->id;
         $model::getAlbumAllow($id, $userId);
-            
-            return  $model::getAlbumAllow($id, $userId);
+
+        return $model::getAlbumAllow($id, $userId);
     }
 }

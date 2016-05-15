@@ -72,72 +72,81 @@ class AlbumClients extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
-    
 
+
+    /**
+     * @return array
+     */
     public function behaviors()
     {
         return [
             [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                     \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                    \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
                 ],
             ],
         ];
     }
-    
 
+
+    /**
+     * @param $userId
+     * @return array
+     */
     public static function getPhotographerAlbums($userId)
     {
         $i = 0;
-        $photographerAlbums = array ();
+        $photographerAlbums = array();
         $albums = Albums::find()
-              -> select ('id')
-              -> where ([
+            ->select('id')
+            ->where([
                 'user_id' => $userId,
-                ])
-              ->asArray()
-              ->all();
-        
-        foreach ($albums as $album)
-        {
+            ])
+            ->asArray()
+            ->all();
+
+        foreach ($albums as $album) {
             $photographerAlbums[$i] = $album['id'];
             $i++;
         }
 
-            return $photographerAlbums;
+        return $photographerAlbums;
     }
 
+    /**
+     * @param $id
+     * @param $userId
+     * @return bool
+     */
     public static function getAlbumAllow($id, $userId)
     {
         $i = 0;
-        $photographerAlbums = array ();
+        $photographerAlbums = array();
         $albums = Albums::find()
-              -> select ('id')
-              -> where ([
+            ->select('id')
+            ->where([
                 'user_id' => $userId,
-                ])
-              ->asArray()
-              ->all();
-        
-        foreach ($albums as $album)
-        {
+            ])
+            ->asArray()
+            ->all();
+
+        foreach ($albums as $album) {
             $photographerAlbums[$i] = $album['id'];
             $i++;
         }
 
 
         $clientAlbum = AlbumClients::find()
-                       -> select ('album_id')
-                       -> where ([
-                        'id' => $id,
-                        ])
-                        ->asArray()
-                        ->all();
+            ->select('album_id')
+            ->where([
+                'id' => $id,
+            ])
+            ->asArray()
+            ->all();
 
         if (in_array($clientAlbum[0]['album_id'], $photographerAlbums))
             return true;
-
     }
 
 }

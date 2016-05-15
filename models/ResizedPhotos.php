@@ -6,12 +6,31 @@ use Yii;
 
 class ResizedPhotos extends \yii\db\ActiveRecord
 {
-   
+
+    /**
+     * This is the model class for table "resized_photos".
+     *
+     * @property string $status
+     * @property integer $image_id
+     * @property integer $id
+     * @property string $size
+     * @property string $origin
+     * @property string $comment
+     *
+     * @property AlbumImages $image
+     */
+
+    /**
+     * @inheritdoc
+     */
     public static function tableName()
     {
         return 'resized_photos';
     }
 
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
@@ -23,6 +42,9 @@ class ResizedPhotos extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [
@@ -34,6 +56,9 @@ class ResizedPhotos extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getImage()
     {
         return $this->hasOne(AlbumImages::className(), ['id' => 'image_id']);
