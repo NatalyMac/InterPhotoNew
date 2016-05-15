@@ -6,8 +6,7 @@ class AlbumPhotoClientCest
 {
    public $photoToken = '3fEwuRzczeguZNny4T9Z2LG_1feu0S-A';
    public $clientToken = 'kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2';
-   public $clientAlbum = 78;
-   // wedding
+
     public function _before(ApiGuyTester $I)
     {
   
@@ -25,14 +24,22 @@ class AlbumPhotoClientCest
        $I->wantTo('create a album via API I am photograper');
        $I->amBearerAuthenticated($this->photoToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendPOST('albums', ['name' => 'Holiday']);
-
        $I->seeResponseCodeIs(201);
        $I->seeResponseIsJson();
        $I->seeResponseContainsJson(['name' => 'Holiday']);
-       
        $I->seeInDatabase('albums', ['name' => 'Holiday']);
+       
+       $I->sendPOST('albums', ['name' => 'Wedding']);
+       $I->seeResponseCodeIs(201);
+       $I->seeResponseIsJson();
+       $I->seeResponseContainsJson(['name' => 'Wedding']);
+       $I->seeInDatabase('albums', ['name' => 'Wedding']);
+       $idClient = $I->grabFromDatabase('users', 'id',  ['access_token' => $this->clientToken]);
+       $idAlbum =  $I->grabFromDatabase('albums', 'id',  ['name' => 'Wedding']);
+       $I->sendPOST('album-clients', ['album_id' => $idAlbum, 'user_id'=>$idClient]);
+       $I->seeResponseCodeIs(201);
+
     }
     
     public function tryToTestCreateClient(ApiGuyTester $I, $scenario)
@@ -41,9 +48,7 @@ class AlbumPhotoClientCest
        $I->wantTo('create a user via API I am client');
        $I->amBearerAuthenticated($this->clientToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendPOST('albums', ['name' => 'Holiday']);
-
        $I->seeResponseCodeIs(403); 
     }
 
@@ -52,12 +57,9 @@ class AlbumPhotoClientCest
     
     {
        $I->wantTo('index the albums via API I am photograper');
-       
        $I->amBearerAuthenticated($this->photoToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendGet('albums');
-       
        $I->seeResponseCodeIs(200);
        $I->seeResponseIsJson();
      }  
@@ -66,12 +68,9 @@ class AlbumPhotoClientCest
     
     {
        $I->wantTo('index the albums via API I am client');
-       
        $I->amBearerAuthenticated($this->clientToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendGet('albums');
-       
        $I->seeResponseCodeIs(200);
        $I->seeResponseIsJson();
      }  
@@ -81,12 +80,9 @@ class AlbumPhotoClientCest
     {
        $id = $I->grabFromDatabase('albums', 'id', ['name' => 'Holiday']);
        $I->wantTo('view the album via API I am photographer');
-       
        $I->amBearerAuthenticated($this->photoToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendGet('albums'.'/'.$id);
-       
        $I->seeResponseCodeIs(200);
        $I->seeResponseIsJson();
        $I->seeResponseContainsJson(['id' => (int) $id]);
@@ -94,32 +90,27 @@ class AlbumPhotoClientCest
     
     public function tryToTestViewClient(ApiGuyTester $I, $scenario)
     {
-       
-       $id = $this->clientAlbum;
-
+      $id =  $I->grabFromDatabase('albums', 'id',  ['name' => 'Wedding']);
        $I->wantTo('view the album via API I am client');
-       
        $I->amBearerAuthenticated($this->clientToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendGet('albums'.'/'.$id);
-       
        $I->seeResponseCodeIs(200);
        $I->seeResponseIsJson();
        $I->seeResponseContainsJson(['id' => (int) $id]);
+       $id = $I->grabFromDatabase('albums', 'id',  ['name' => 'Holiday']);
+       $I->sendGet('albums'.'/'.$id);
+       $I->seeResponseCodeIs(403);
+
      }  
 
     public function tryToUpdatePhoto(ApiGuyTester $I, $scenario)
     {
        $id = $I->grabFromDatabase('albums', 'id', ['name' => 'Holiday']);
-       
        $I->wantTo('update the album via API I am photographer');
-       
        $I->amBearerAuthenticated($this->photoToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendPut('albums'.'/'.$id, ['name' => 'Fifties']);
-       
        $I->seeResponseCodeIs(200);
        $I->seeResponseIsJson();
        $I->seeResponseContainsJson(['name' => 'Fifties']);
@@ -129,14 +120,10 @@ class AlbumPhotoClientCest
     public function tryToUpdateClient(ApiGuyTester $I, $scenario)
     {
        $id = $I->grabFromDatabase('albums', 'id', ['name' => 'Wedding']);
-       
        $I->wantTo('update the album via API I am client');
-       
        $I->amBearerAuthenticated($this->clientToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendPut('albums'.'/'.$id, ['name' => 'Fifties']);
-       
        $I->seeResponseCodeIs(403);
       
      }
@@ -144,14 +131,10 @@ class AlbumPhotoClientCest
     public function tryToTestDeletePhoto(ApiGuyTester $I, $scenario)
     {
        $id = $I->grabFromDatabase('albums', 'id',  ['name' => 'Fifties']);
-       
        $I->wantTo('delete the albums via API I am admin');
-       
        $I->amBearerAuthenticated($this->photoToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendDelete('albums'.'/'.$id);
-       
        $I->seeResponseCodeIs(403);
        
      }  
@@ -159,14 +142,10 @@ class AlbumPhotoClientCest
   public function tryToTestDeleteClient(ApiGuyTester $I, $scenario)
     {
        $id = $I->grabFromDatabase('albums', 'id',  ['name' => 'Wedding']);
-       
        $I->wantTo('delete the albums via API I am admin');
-       
        $I->amBearerAuthenticated($this->clientToken);
        $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-       
        $I->sendDelete('albums'.'/'.$id);
-       
        $I->seeResponseCodeIs(403);
        
      }        

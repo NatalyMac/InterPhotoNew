@@ -171,12 +171,12 @@
 
  <body>
  <div class="layout">
- <h1>Codeception Results <small><span style="color: green">OK</span> (9.6s)</small></h1>
+ <h1>Codeception Results <small><span style="color: green">OK</span> (11.2s)</small></h1>
 
 
   <ul id="toolbar-filter">
     <li onClick="showAllScenarios()">Show all</li>
-    <li onClick="toogleScenarios('scenarioSuccess', this)">Success (34)</li>
+    <li onClick="toogleScenarios('scenarioSuccess', this)">Success (36)</li>
     <li onClick="toogleScenarios('scenarioFailed', this)">Failed (0)</li>
     <li onClick="toogleScenarios('scenarioSkipped', this)">Skipped (0)</li>
     <li onClick="toogleScenarios('scenarioIncomplete', this)">Incomplete (0)</li>
@@ -188,12 +188,69 @@
  </td>
 </tr>   <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('1', this)">[+] create a album via api i am admin (AlbumAdminCest::tryToTestCreate) (0.09s)</p>
+     <p class="scenarioSuccess" onclick="showHide('1', this)">[+] do something via api i am admin (AlbumAdminCest::tryToTestDoSomething) (0.14s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
      <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer1">
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Animals"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"albums",{"name":"mega1"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send get <span style="color: #732E81;">"albums"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send get <span style="color: #732E81;">"albums/78"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send put <span style="color: #732E81;">"albums/78",{"name":"MEGA"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send delete <span style="color: #732E81;">"albums/78"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+
+     </table>
+    </td>
+   </tr>
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('2', this)">[+] create a album via api i am admin (AlbumAdminCest::tryToTestCreate) (0.13s)</p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer2">
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
       </tr>
@@ -222,6 +279,14 @@
        <td class="stepName">I see in database <span style="color: #732E81;">"albums",{"name":"Wedding"}</span></td>
       </tr>
 
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"albums",{"name":""}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">406</span></td>
+      </tr>
+
 
      </table>
     </td>
@@ -229,12 +294,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('2', this)">[+] index the albums via api i am admin (AlbumAdminCest::tryToTestIndex) (0.11s)</p>
+     <p class="scenarioSuccess" onclick="showHide('3', this)">[+] index the albums via api i am admin (AlbumAdminCest::tryToTestIndex) (0.08s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer2">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer3">
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
       </tr>
@@ -262,48 +327,7 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('3', this)">[+] view the album via api i am admin (AlbumAdminCest::tryToTestView) (0.04s)</p>
-    </td>
-   </tr>
-   <tr class="scenarioRow scenarioSuccess">
-    <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer3">
-      <tr>
-       <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Wedding"}</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I send get <span style="color: #732E81;">"albums/103"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response contains json <span style="color: #732E81;">{"id":103}</span></td>
-      </tr>
-
-
-     </table>
-    </td>
-   </tr>
-
-   <tr class="scenarioRow scenarioSuccess">
-    <td>
-     <p class="scenarioSuccess" onclick="showHide('4', this)">[+] update the album via api i am admin (AlbumAdminCest::tryToUpdate) (0.09s)</p>
+     <p class="scenarioSuccess" onclick="showHide('4', this)">[+] view the album via api i am admin (AlbumAdminCest::tryToTestView) (0.05s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
@@ -322,7 +346,48 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send put <span style="color: #732E81;">"albums/103",{"name":"Fifties"}</span></td>
+       <td class="stepName">I send get <span style="color: #732E81;">"albums/146"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response contains json <span style="color: #732E81;">{"id":146}</span></td>
+      </tr>
+
+
+     </table>
+    </td>
+   </tr>
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('5', this)">[+] update the album via api i am admin (AlbumAdminCest::tryToUpdate) (0.1s)</p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer5">
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Wedding"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send put <span style="color: #732E81;">"albums/146",{"name":"Fifties"}</span></td>
       </tr>
 
       <tr>
@@ -341,6 +406,14 @@
        <td class="stepName">I see in database <span style="color: #732E81;">"albums",{"name":"Fifties"}</span></td>
       </tr>
 
+      <tr>
+       <td class="stepName">I send put <span style="color: #732E81;">"albums/"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">405</span></td>
+      </tr>
+
 
      </table>
     </td>
@@ -348,12 +421,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('5', this)">[+] delete the albums via api i am admin (AlbumAdminCest::tryToTestDelete) (0.07s)</p>
+     <p class="scenarioSuccess" onclick="showHide('6', this)">[+] delete the albums via api i am admin (AlbumAdminCest::tryToTestDelete) (0.1s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer5">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer6">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Fifties"}</span></td>
       </tr>
@@ -367,11 +440,19 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send delete <span style="color: #732E81;">"albums/86"</span></td>
+       <td class="stepName">I send delete <span style="color: #732E81;">"albums/144"</span></td>
       </tr>
 
       <tr>
        <td class="stepName">I see response code is <span style="color: #732E81;">204</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send delete <span style="color: #732E81;">"albums/"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">405</span></td>
       </tr>
 
 
@@ -381,12 +462,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('6', this)">[+] create a album via api i am photograper (AlbumPhotoClientCest::tryToTestCreatePhoto) (0.09s)</p>
+     <p class="scenarioSuccess" onclick="showHide('7', this)">[+] create a album via api i am photograper (AlbumPhotoClientCest::tryToTestCreatePhoto) (0.26s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer6">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer7">
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"3fEwuRzczeguZNny4T9Z2LG_1feu0S-A"</span></td>
       </tr>
@@ -415,6 +496,42 @@
        <td class="stepName">I see in database <span style="color: #732E81;">"albums",{"name":"Holiday"}</span></td>
       </tr>
 
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"albums",{"name":"Wedding"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">201</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response contains json <span style="color: #732E81;">{"name":"Wedding"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see in database <span style="color: #732E81;">"albums",{"name":"Wedding"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Wedding"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"album-clients",{"album_id":"147","user_id":"122"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">201</span></td>
+      </tr>
+
 
      </table>
     </td>
@@ -422,12 +539,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('7', this)">[+] create a user via api i am client (AlbumPhotoClientCest::tryToTestCreateClient) (0.05s)</p>
+     <p class="scenarioSuccess" onclick="showHide('8', this)">[+] create a user via api i am client (AlbumPhotoClientCest::tryToTestCreateClient) (0.1s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer7">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer8">
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"</span></td>
       </tr>
@@ -451,46 +568,46 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('8', this)">[+] index the albums via api i am photograper (AlbumPhotoClientCest::tryToTestIndexPhoto) (0.08s)</p>
-    </td>
-   </tr>
-   <tr class="scenarioRow scenarioSuccess">
-    <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer8">
-      <tr>
-       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"3fEwuRzczeguZNny4T9Z2LG_1feu0S-A"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I send get <span style="color: #732E81;">"albums"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
-      </tr>
-
-
-     </table>
-    </td>
-   </tr>
-
-   <tr class="scenarioRow scenarioSuccess">
-    <td>
-     <p class="scenarioSuccess" onclick="showHide('9', this)">[+] index the albums via api i am client (AlbumPhotoClientCest::tryToTestIndexClient) (0.07s)</p>
+     <p class="scenarioSuccess" onclick="showHide('9', this)">[+] index the albums via api i am photograper (AlbumPhotoClientCest::tryToTestIndexPhoto) (0.08s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
      <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer9">
       <tr>
+       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"3fEwuRzczeguZNny4T9Z2LG_1feu0S-A"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send get <span style="color: #732E81;">"albums"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
+      </tr>
+
+
+     </table>
+    </td>
+   </tr>
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('10', this)">[+] index the albums via api i am client (AlbumPhotoClientCest::tryToTestIndexClient) (0.07s)</p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer10">
+      <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"</span></td>
       </tr>
 
@@ -517,12 +634,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('10', this)">[+] view the album via api i am photographer (AlbumPhotoClientCest::tryToTestViewPhoto) (0.05s)</p>
+     <p class="scenarioSuccess" onclick="showHide('11', this)">[+] view the album via api i am photographer (AlbumPhotoClientCest::tryToTestViewPhoto) (0.05s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer10">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer11">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Holiday"}</span></td>
       </tr>
@@ -536,7 +653,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send get <span style="color: #732E81;">"albums/106"</span></td>
+       <td class="stepName">I send get <span style="color: #732E81;">"albums/151"</span></td>
       </tr>
 
       <tr>
@@ -548,7 +665,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I see response contains json <span style="color: #732E81;">{"id":106}</span></td>
+       <td class="stepName">I see response contains json <span style="color: #732E81;">{"id":151}</span></td>
       </tr>
 
 
@@ -558,12 +675,16 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('11', this)">[+] view the album via api i am client (AlbumPhotoClientCest::tryToTestViewClient) (0.05s)</p>
+     <p class="scenarioSuccess" onclick="showHide('12', this)">[+] view the album via api i am client (AlbumPhotoClientCest::tryToTestViewClient) (0.1s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer11">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer12">
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Wedding"}</span></td>
+      </tr>
+
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"</span></td>
       </tr>
@@ -573,7 +694,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send get <span style="color: #732E81;">"albums/78"</span></td>
+       <td class="stepName">I send get <span style="color: #732E81;">"albums/147"</span></td>
       </tr>
 
       <tr>
@@ -585,7 +706,19 @@
       </tr>
 
       <tr>
-       <td class="stepName">I see response contains json <span style="color: #732E81;">{"id":78}</span></td>
+       <td class="stepName">I see response contains json <span style="color: #732E81;">{"id":147}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Holiday"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send get <span style="color: #732E81;">"albums/151"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">403</span></td>
       </tr>
 
 
@@ -595,12 +728,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('12', this)">[+] update the album via api i am photographer (AlbumPhotoClientCest::tryToUpdatePhoto) (0.1s)</p>
+     <p class="scenarioSuccess" onclick="showHide('13', this)">[+] update the album via api i am photographer (AlbumPhotoClientCest::tryToUpdatePhoto) (0.09s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer12">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer13">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Holiday"}</span></td>
       </tr>
@@ -614,7 +747,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send put <span style="color: #732E81;">"albums/106",{"name":"Fifties"}</span></td>
+       <td class="stepName">I send put <span style="color: #732E81;">"albums/151",{"name":"Fifties"}</span></td>
       </tr>
 
       <tr>
@@ -640,12 +773,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('13', this)">[+] update the album via api i am client (AlbumPhotoClientCest::tryToUpdateClient) (0.04s)</p>
+     <p class="scenarioSuccess" onclick="showHide('14', this)">[+] update the album via api i am client (AlbumPhotoClientCest::tryToUpdateClient) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer13">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer14">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Wedding"}</span></td>
       </tr>
@@ -659,7 +792,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send put <span style="color: #732E81;">"albums/105",{"name":"Fifties"}</span></td>
+       <td class="stepName">I send put <span style="color: #732E81;">"albums/147",{"name":"Fifties"}</span></td>
       </tr>
 
       <tr>
@@ -673,12 +806,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('14', this)">[+] delete the albums via api i am admin (AlbumPhotoClientCest::tryToTestDeletePhoto) (0.04s)</p>
+     <p class="scenarioSuccess" onclick="showHide('15', this)">[+] delete the albums via api i am admin (AlbumPhotoClientCest::tryToTestDeletePhoto) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer14">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer15">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Fifties"}</span></td>
       </tr>
@@ -692,7 +825,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send delete <span style="color: #732E81;">"albums/87"</span></td>
+       <td class="stepName">I send delete <span style="color: #732E81;">"albums/145"</span></td>
       </tr>
 
       <tr>
@@ -706,12 +839,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('15', this)">[+] delete the albums via api i am admin (AlbumPhotoClientCest::tryToTestDeleteClient) (0.04s)</p>
+     <p class="scenarioSuccess" onclick="showHide('16', this)">[+] delete the albums via api i am admin (AlbumPhotoClientCest::tryToTestDeleteClient) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer15">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer16">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"albums","id",{"name":"Wedding"}</span></td>
       </tr>
@@ -725,7 +858,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send delete <span style="color: #732E81;">"albums/105"</span></td>
+       <td class="stepName">I send delete <span style="color: #732E81;">"albums/147"</span></td>
       </tr>
 
       <tr>
@@ -739,12 +872,69 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('16', this)">[+] create a user via api i am admin (UserAdminCest::tryToTestCreate) (1.13s)</p>
+     <p class="scenarioSuccess" onclick="showHide('17', this)">[+] do something via api i am admin (UserAdminCest::tryToTestDoSomething) (0.11s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer16">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer17">
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"users",{"name":"mega1","email":"mega1@email.com","password":"mega","role":"admin"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send get <span style="color: #732E81;">"users"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send get <span style="color: #732E81;">"users/125"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send put <span style="color: #732E81;">"users/125",{"name":"MEGA","password":"mmm"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send delete <span style="color: #732E81;">"users/125"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">401</span></td>
+      </tr>
+
+
+     </table>
+    </td>
+   </tr>
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('18', this)">[+] login  via api i am user i am registratied (UserAdminCest::tryToTestCreate) (2.19s)</p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer18">
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
       </tr>
@@ -778,7 +968,63 @@
       </tr>
 
       <tr>
-       <td class="stepName">I see in database <span style="color: #732E81;">"auth_assignment",{"user_id":"130"}</span></td>
+       <td class="stepName">I see in database <span style="color: #732E81;">"auth_assignment",{"user_id":"151"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"users",{"name":"mega1","email":"mega1email.com","password":"mega","role":"admin"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">406</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"users",{"email":"mega1email.com","password":"mega","role":"admin"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">406</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"users",{"email":"mega1@email.com","password":"mega","role":"admin"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">406</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I am http authenticated <span style="color: #732E81;">"mega1@email.com","mega"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send post <span style="color: #732E81;">"auths/login"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see http header <span style="color: #732E81;">"Authorization"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"users","access_token",{"email":"mega1@email.com"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I grab http header <span style="color: #732E81;">"Authorization"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I assert equals <span style="color: #732E81;">"Bearer 9BnL17ye9HRPWNkEELSLKIF-b7Gj7HRk","Bearer 9BnL17ye9HRPWNkEELSLKIF-b7Gj7HRk"</span></td>
       </tr>
 
 
@@ -788,12 +1034,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('17', this)">[+] index the user via api i am admin (UserAdminCest::tryToTestIndex) (0.04s)</p>
+     <p class="scenarioSuccess" onclick="showHide('19', this)">[+] index the user via api i am admin (UserAdminCest::tryToTestIndex) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer17">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer19">
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
       </tr>
@@ -825,93 +1071,7 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('18', this)">[+] view the user via api i am admin (UserAdminCest::tryToTestView) (0.04s)</p>
-    </td>
-   </tr>
-   <tr class="scenarioRow scenarioSuccess">
-    <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer18">
-      <tr>
-       <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"email":"mega1@email.com"}</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I send get <span style="color: #732E81;">"users/130"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response contains json <span style="color: #732E81;">{"id":130}</span></td>
-      </tr>
-
-
-     </table>
-    </td>
-   </tr>
-
-   <tr class="scenarioRow scenarioSuccess">
-    <td>
-     <p class="scenarioSuccess" onclick="showHide('19', this)">[+] update the user via api i am admin (UserAdminCest::tryToUpdate) (1.04s)</p>
-    </td>
-   </tr>
-   <tr class="scenarioRow scenarioSuccess">
-    <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer19">
-      <tr>
-       <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"email":"mega1@email.com"}</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I send put <span style="color: #732E81;">"users/130",{"name":"MEGA","password":"mmm"}</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see response contains json <span style="color: #732E81;">{"name":"MEGA"}</span></td>
-      </tr>
-
-      <tr>
-       <td class="stepName">I see in database <span style="color: #732E81;">"users",{"name":"MEGA"}</span></td>
-      </tr>
-
-
-     </table>
-    </td>
-   </tr>
-
-   <tr class="scenarioRow scenarioSuccess">
-    <td>
-     <p class="scenarioSuccess" onclick="showHide('20', this)">[+] delete the user via api i am admin (UserAdminCest::tryToTestDelete) (0.09s)</p>
+     <p class="scenarioSuccess" onclick="showHide('20', this)">[+] view the user via api i am admin (UserAdminCest::tryToTestView) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
@@ -930,11 +1090,19 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send delete <span style="color: #732E81;">"users/130"</span></td>
+       <td class="stepName">I send get <span style="color: #732E81;">"users/151"</span></td>
       </tr>
 
       <tr>
-       <td class="stepName">I see response code is <span style="color: #732E81;">204</span></td>
+       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response contains json <span style="color: #732E81;">{"id":151}</span></td>
       </tr>
 
 
@@ -944,12 +1112,106 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('21', this)">[+] create a user via api i am photograph (UserPhotoClientCest::tryToTestCreatePhoto) (0.1s)</p>
+     <p class="scenarioSuccess" onclick="showHide('21', this)">[+] update the user via api i am admin (UserAdminCest::tryToUpdate) (1.06s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
      <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer21">
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"email":"mega1@email.com"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send put <span style="color: #732E81;">"users/151",{"name":"MEGA","password":"mmm"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">200</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response is json <span style="color: #732E81;"></span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response contains json <span style="color: #732E81;">{"name":"MEGA"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see in database <span style="color: #732E81;">"users",{"name":"MEGA"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send put <span style="color: #732E81;">"users/"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">405</span></td>
+      </tr>
+
+
+     </table>
+    </td>
+   </tr>
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('22', this)">[+] delete the user via api i am admin (UserAdminCest::tryToTestDelete) (0.13s)</p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer22">
+      <tr>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"email":"mega1@email.com"}</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"8LXKDTVIf2URBBtyMW-Cl597nvCVW1q0"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send delete <span style="color: #732E81;">"users/151"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">204</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I send delete <span style="color: #732E81;">"users/"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName">I see response code is <span style="color: #732E81;">405</span></td>
+      </tr>
+
+
+     </table>
+    </td>
+   </tr>
+
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <p class="scenarioSuccess" onclick="showHide('23', this)">[+] create a user via api i am photograph (UserPhotoClientCest::tryToTestCreatePhoto) (0.04s)</p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioSuccess">
+    <td>
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer23">
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"3fEwuRzczeguZNny4T9Z2LG_1feu0S-A"</span></td>
       </tr>
@@ -973,12 +1235,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('22', this)">[+] create a user via api i am client (UserPhotoClientCest::tryToTestCreateClient) (0.04s)</p>
+     <p class="scenarioSuccess" onclick="showHide('24', this)">[+] create a user via api i am client (UserPhotoClientCest::tryToTestCreateClient) (0.05s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer22">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer24">
       <tr>
        <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"</span></td>
       </tr>
@@ -1002,12 +1264,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('23', this)">[+] index the user via api i am photograph (UserPhotoClientCest::tryToTestIndexPhoto) (0.05s)</p>
+     <p class="scenarioSuccess" onclick="showHide('25', this)">[+] index the user via api i am photograph (UserPhotoClientCest::tryToTestIndexPhoto) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer23">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer25">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"3fEwuRzczeguZNny4T9Z2LG_1feu0S-A"}</span></td>
       </tr>
@@ -1043,12 +1305,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('24', this)">[+] index the user via api i am client (UserPhotoClientCest::tryToTestIndexClient) (0.04s)</p>
+     <p class="scenarioSuccess" onclick="showHide('26', this)">[+] index the user via api i am client (UserPhotoClientCest::tryToTestIndexClient) (0.05s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer24">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer26">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"}</span></td>
       </tr>
@@ -1084,12 +1346,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('25', this)">[+] view the user via api i am photograph (UserPhotoClientCest::tryToTestViewPhoto) (0.05s)</p>
+     <p class="scenarioSuccess" onclick="showHide('27', this)">[+] view the user via api i am photograph (UserPhotoClientCest::tryToTestViewPhoto) (0.05s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer25">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer27">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"3fEwuRzczeguZNny4T9Z2LG_1feu0S-A"}</span></td>
       </tr>
@@ -1125,12 +1387,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('26', this)">[+] view the user via api i am client (UserPhotoClientCest::tryToTestViewClient) (0.04s)</p>
+     <p class="scenarioSuccess" onclick="showHide('28', this)">[+] view the user via api i am client (UserPhotoClientCest::tryToTestViewClient) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer26">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer28">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"}</span></td>
       </tr>
@@ -1166,12 +1428,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('27', this)">[+] update the user via api i am photographer (UserPhotoClientCest::tryToUpdatePhoto) (1.03s)</p>
+     <p class="scenarioSuccess" onclick="showHide('29', this)">[+] update the user via api i am photographer (UserPhotoClientCest::tryToUpdatePhoto) (1.02s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer27">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer29">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"3fEwuRzczeguZNny4T9Z2LG_1feu0S-A"}</span></td>
       </tr>
@@ -1211,12 +1473,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('28', this)">[+] update the user via api i am client (UserPhotoClientCest::tryToUpdateClient) (1.03s)</p>
+     <p class="scenarioSuccess" onclick="showHide('30', this)">[+] update the user via api i am client (UserPhotoClientCest::tryToUpdateClient) (1.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer28">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer30">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"}</span></td>
       </tr>
@@ -1256,12 +1518,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('29', this)">[+] delete the user via api i am photographer (UserPhotoClientCest::tryToTestDeletePhoto) (0.05s)</p>
+     <p class="scenarioSuccess" onclick="showHide('31', this)">[+] delete the user via api i am photographer (UserPhotoClientCest::tryToTestDeletePhoto) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer29">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer31">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"3fEwuRzczeguZNny4T9Z2LG_1feu0S-A"}</span></td>
       </tr>
@@ -1289,12 +1551,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('30', this)">[+] delete the user via api i am client (UserPhotoClientCest::tryToTestDeleteClient) (0.04s)</p>
+     <p class="scenarioSuccess" onclick="showHide('32', this)">[+] delete the user via api i am client (UserPhotoClientCest::tryToTestDeleteClient) (0.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer30">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer32">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","id",{"access_token":"kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2"}</span></td>
       </tr>
@@ -1322,12 +1584,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('31', this)">[+] login  via api i am user i am registratied (ZAuth::tryToTestLogin) (1.05s)</p>
+     <p class="scenarioSuccess" onclick="showHide('33', this)">[+] login  via api i am user i am registratied (ZAuth::tryToTestLogin) (1s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer31">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer33">
       <tr>
        <td class="stepName">I am http authenticated <span style="color: #732E81;">"travers.nk@gmail.com","111"</span></td>
       </tr>
@@ -1357,7 +1619,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I assert equals <span style="color: #732E81;">"Bearer U37N6MJcwRRGvmxb6dCt-JzuFFQW1g2g","Bearer U37N6MJcwRRGvmxb6dCt-JzuFFQW1g2g"</span></td>
+       <td class="stepName">I assert equals <span style="color: #732E81;">"Bearer tQ9X_2AT7Gu1BUqIUGHtumueJDinI_98","Bearer tQ9X_2AT7Gu1BUqIUGHtumueJDinI_98"</span></td>
       </tr>
 
 
@@ -1367,18 +1629,18 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('32', this)">[+] logout  via api i am user i am logged (ZAuth::tryToTestLogout) (0.07s)</p>
+     <p class="scenarioSuccess" onclick="showHide('34', this)">[+] logout  via api i am user i am logged (ZAuth::tryToTestLogout) (0.06s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer32">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer34">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"users","access_token",{"email":"travers.nk@gmail.com"}</span></td>
       </tr>
 
       <tr>
-       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"U37N6MJcwRRGvmxb6dCt-JzuFFQW1g2g"</span></td>
+       <td class="stepName">I am bearer authenticated <span style="color: #732E81;">"tQ9X_2AT7Gu1BUqIUGHtumueJDinI_98"</span></td>
       </tr>
 
       <tr>
@@ -1398,7 +1660,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I don't see in database <span style="color: #732E81;">"users",{"access_token":"U37N6MJcwRRGvmxb6dCt-JzuFFQW1g2g"}</span></td>
+       <td class="stepName">I don't see in database <span style="color: #732E81;">"users",{"access_token":"tQ9X_2AT7Gu1BUqIUGHtumueJDinI_98"}</span></td>
       </tr>
 
 
@@ -1408,12 +1670,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('33', this)">[+] get reset code  via api i am user i am registratied i forgot password (ZAuth::tryToTestAskResetCode) (1.57s)</p>
+     <p class="scenarioSuccess" onclick="showHide('35', this)">[+] get reset code  via api i am user i am registratied i forgot password (ZAuth::tryToTestAskResetCode) (1.63s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer33">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer35">
       <tr>
        <td class="stepName">I have http header <span style="color: #732E81;">"Content-Type","application/x-www-form-urlencoded"</span></td>
       </tr>
@@ -1441,12 +1703,12 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('34', this)">[+] reset password  via api i am user i am registratied i got reset code (ZAuth::tryToTestResetPassword) (1.09s)</p>
+     <p class="scenarioSuccess" onclick="showHide('36', this)">[+] reset password  via api i am user i am registratied i got reset code (ZAuth::tryToTestResetPassword) (1.04s)</p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer34">
+     <table border="0" width="100%" class="scenarioSuccess scenarioStepsTable" id="stepContainer36">
       <tr>
        <td class="stepName">I grab from database <span style="color: #732E81;">"reset_pass","reset_code",{"email":"travers.nk@gmail.com","used":0}</span></td>
       </tr>
@@ -1460,7 +1722,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I send put <span style="color: #732E81;">"auths/reset",{"email":"travers.nk@gmail.com","reset_code":"tfSFzmAo0SdbWdOkxualfwoIoAlv75jo","password":"111"}</span></td>
+       <td class="stepName">I send put <span style="color: #732E81;">"auths/reset",{"email":"travers.nk@gmail.com","reset_code":"EWhVf_7SbkfhUrGzMDzp4n8HLz474kZ7","password":"111"}</span></td>
       </tr>
 
       <tr>
@@ -1468,7 +1730,7 @@
       </tr>
 
       <tr>
-       <td class="stepName">I grab from database <span style="color: #732E81;">"reset_pass","used",{"reset_code":"tfSFzmAo0SdbWdOkxualfwoIoAlv75jo"}</span></td>
+       <td class="stepName">I grab from database <span style="color: #732E81;">"reset_pass","used",{"reset_code":"EWhVf_7SbkfhUrGzMDzp4n8HLz474kZ7"}</span></td>
       </tr>
 
       <tr>
@@ -1488,7 +1750,7 @@
       <table border="0">
        <tr>
         <td width="250" class="scenarioSuccess">Successful scenarios:</td>
-        <td class="scenarioSuccessValue"><strong>34</strong></td>
+        <td class="scenarioSuccessValue"><strong>36</strong></td>
        </tr>
        <tr>
         <td class="scenarioFailed">Failed scenarios:</td>
