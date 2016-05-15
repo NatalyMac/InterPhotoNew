@@ -62,8 +62,8 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
             [['name', 'email'], 'string', 'max' => 50],
             [['email'], 'email'],
             [['phone'], 'string', 'max' => 15],
-            [['role', 'email'], 'safe', 'when'=> function ($model, $attribute)
-                                        { return \Yii::$app->user->identity->role == 'admin';}], 
+            // [['role', 'email'], 'safe', 'when'=> function ($model, $attribute)
+            //                            { return \Yii::$app->user->identity->role == 'admin';}], 
             // callback не срабатывает, валидация происходит при любом раскладе
             // дампила иходники, в классе Validator $when = null, при непосредственном вызове 
             // call_user_func($this->when, $model, $attribute)) - грит, что на входе ждет валидную коллбэк функцию,

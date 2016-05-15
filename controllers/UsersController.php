@@ -180,7 +180,6 @@ class UsersController extends MainController
      */
     public function actionUpdate()
     {
-        var_dump('ffff');
           return  parent::actionUpdate();
     }
 
@@ -241,8 +240,6 @@ class UsersController extends MainController
 
     public function actions()
     {
-        var_dump('ssss');
-        var_dump(\Yii::$app->user->identity);
         $actions = parent::actions();
         $actions['create'] = [
             'class' => 'yii\rest\CreateAction',
