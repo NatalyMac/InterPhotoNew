@@ -7,7 +7,7 @@ class UserPhotoClientCest
 {
     public $photoToken = '3fEwuRzczeguZNny4T9Z2LG_1feu0S-A';
     public $clientToken = 'kKdzaUE10lMa13EqgC1uRGgNYmeuQJt2';
-    // public $appConfig = '@tests/api/_config.php';
+    
     public function _before(ApiGuyTester $I)
     {
     // $I = new ApiGuyTester($scenario);
@@ -140,7 +140,8 @@ class UserPhotoClientCest
        $I->seeResponseCodeIs(403);
        
      }  
- public function tryToTestDeleteClient(ApiGuyTester $I, $scenario)
+     
+     public function tryToTestDeleteClient(ApiGuyTester $I, $scenario)
     {
       $id = $I->grabFromDatabase('users', 'id',  ['access_token' => $this->clientToken]);
        $I->wantTo('delete the user via API I am client');
