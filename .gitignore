@@ -27,3 +27,5 @@ phpunit.phar
 /phpunit.xml
 
 tests/_output/*
+config/*
+console/cmd/config/*
